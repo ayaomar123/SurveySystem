@@ -4,6 +4,16 @@
     <ProjectReference Include="..\SurveySystem.Domain\SurveySystem.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Users\Commands\UpdatePassword\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.0" />
+    <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
