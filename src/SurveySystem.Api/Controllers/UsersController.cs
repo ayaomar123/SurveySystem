@@ -21,7 +21,7 @@ namespace SurveySystem.Api.Controllers
         public async Task<IActionResult> Create(CreateUserRequest request)
         {
             var id = await mediator.Send(new CreateUserCommand(request));
-            return Ok(new { Id = id, Message = "Question created successfully." });
+            return Ok(new { Id = id, Message = "User created successfully." });
         }
     }
 }
