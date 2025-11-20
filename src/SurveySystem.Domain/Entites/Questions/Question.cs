@@ -5,9 +5,9 @@ namespace SurveySystem.Domain.Entites.Questions
     public class Question
     {
         public Guid Id { get; private set; } = Guid.NewGuid();
-        public QuestionType QuestionType { get; private set; }
         public string Title { get; private set; } = string.Empty;
         public string? Description { get; private set; }
+        public QuestionType QuestionType { get; private set; }
         public bool IsRequired { get; private set; }
         public bool Status { get; private set; } = true;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
@@ -83,5 +83,41 @@ namespace SurveySystem.Domain.Entites.Questions
 
             return q;
         }
+
+        public void UpdateBasicInfo(
+            string title,
+            string? description,
+            QuestionType type,
+            bool isRequired,
+            bool status)
+        {
+            Title = title;
+            Description = description;
+            QuestionType = (QuestionType)type;
+            IsRequired = isRequired;
+            Status = status;
+        }
+
+        public void UpdateChoices(List<QuestionChoice> newChoices)
+        {
+            Choices.Clear();
+            Choices.AddRange(newChoices);
+        }
+
+        public void UpdateSliderConfig(SliderConfig config)
+        {
+            SliderConfig = config;
+        }
+
+        public void UpdateStarConfig(StarConfig config)
+        {
+            StarConfig = config;
+        }
+
+        public void UpdateStatus()
+        {
+            Status = !Status;
+        }
+
     }
 }

@@ -5,8 +5,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Questionns\Commands\UpdateQuestion\" />
-    <Folder Include="Questionns\Commands\UpdateQuestionStatus\" />
     <Folder Include="Users\Commands\UpdatePassword\" />
   </ItemGroup>
 
