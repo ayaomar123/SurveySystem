@@ -5,9 +5,9 @@ using SurveySystem.Application.Users.Dtos;
 
 namespace SurveySystem.Application.Users.Queries.GetUsers
 {
-    public class GetUsersCommandHandler(IAppDbContext context) : IRequestHandler<GetUsersCommand, List<UsersResponse>>
+    public class GetUsersQueryHandler(IAppDbContext context) : IRequestHandler<GetUsersQuery, List<UsersResponse>>
     {
-        public async Task<List<UsersResponse>> Handle(GetUsersCommand request, CancellationToken ct)
+        public async Task<List<UsersResponse>> Handle(GetUsersQuery request, CancellationToken ct)
         {
             var users = await context.Users
                 .Select(user => new UsersResponse

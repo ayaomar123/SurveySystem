@@ -13,7 +13,7 @@ namespace SurveySystem.Infrastructure.Authentication
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
 
-            var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+            var key = Encoding.UTF8.GetBytes(jwtSettings["Secret"]!);
 
             var signingKey = new SymmetricSecurityKey(key);
             var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
@@ -29,7 +29,7 @@ namespace SurveySystem.Infrastructure.Authentication
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(3),
+                expires: DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["TokenExpirationInMinutes"]!)),
                 signingCredentials: credentials
             );
 

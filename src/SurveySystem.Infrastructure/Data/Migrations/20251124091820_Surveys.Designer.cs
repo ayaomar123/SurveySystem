@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SurveySystem.Infrastructure;
 
@@ -11,9 +12,11 @@ using SurveySystem.Infrastructure;
 namespace SurveySystem.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251124091820_Surveys")]
+    partial class Surveys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,10 +173,6 @@ namespace SurveySystem.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
-
                     b.ToTable("Surveys");
                 });
 
@@ -193,8 +192,6 @@ namespace SurveySystem.Infrastructure.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
 
                     b.HasIndex("SurveyId");
 
@@ -256,39 +253,13 @@ namespace SurveySystem.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Survey", b =>
-                {
-                    b.HasOne("SurveySystem.Domain.Entites.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SurveySystem.Domain.Entites.User", "LastModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastModifiedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastModifiedByUser");
-                });
-
             modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.SurveyQuestion", b =>
                 {
-                    b.HasOne("SurveySystem.Domain.Entites.Questions.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("SurveySystem.Domain.Entites.Surveys.Survey", null)
                         .WithMany("SurveyQuestions")
                         .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("SurveySystem.Domain.Entites.Questions.Question", b =>

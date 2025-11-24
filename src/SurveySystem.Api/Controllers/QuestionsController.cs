@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SurveySystem.Application.Questionns.Commands.CreateQuestion;
 using SurveySystem.Application.Questionns.Commands.UpdateQuestion;
@@ -10,6 +11,7 @@ namespace SurveySystem.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class QuestionsController(IMediator mediator) : ControllerBase
     {
         [HttpGet]

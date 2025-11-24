@@ -13,7 +13,7 @@ namespace SurveySystem.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await mediator.Send(new GetUsersCommand());
+            var result = await mediator.Send(new GetUsersQuery());
             return Ok(result);
         }
 

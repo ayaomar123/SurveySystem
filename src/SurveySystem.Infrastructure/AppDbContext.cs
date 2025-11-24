@@ -2,6 +2,7 @@
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Domain.Entites;
 using SurveySystem.Domain.Entites.Questions;
+using SurveySystem.Domain.Entites.Surveys;
 
 namespace SurveySystem.Infrastructure
 {
@@ -16,6 +17,8 @@ namespace SurveySystem.Infrastructure
         public DbSet<QuestionChoice> QuestionChoices => Set<QuestionChoice>();
         public DbSet<SliderConfig> SliderConfigs => Set<SliderConfig>();
         public DbSet<StarConfig> StarConfigs => Set<StarConfig>();
+        public DbSet<Survey> Surveys => Set<Survey>();
+        public DbSet<SurveyQuestion> SurveyQuestions => Set<SurveyQuestion>();
 
         public override Task<int> SaveChangesAsync(CancellationToken ct)
         {

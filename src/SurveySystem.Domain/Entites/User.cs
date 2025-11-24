@@ -1,7 +1,4 @@
-﻿using System.Net.Mail;
-using System.Text.RegularExpressions;
-
-namespace SurveySystem.Domain.Entites
+﻿namespace SurveySystem.Domain.Entites
 {
     public enum UserRole
     {
@@ -16,11 +13,11 @@ namespace SurveySystem.Domain.Entites
         public string PasswordHash { get; private set; } = string.Empty;
         public UserRole Role { get; private set; } = UserRole.Designer;
 
-        public User()
-        {
+        private User()
+        { 
         }
 
-        public User(string name, string email, string passwordHash, UserRole role)
+        private User(string name, string email, string passwordHash, UserRole role)
         {
             Name = name;
             Email = email;
@@ -30,8 +27,23 @@ namespace SurveySystem.Domain.Entites
 
         public static User Create(string name, string email, string passwordHash, UserRole userRole)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("name required");
+            }
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ArgumentException("email required");
+            }
+
+            if (string.IsNullOrWhiteSpace(passwordHash))
+            {
+                throw new ArgumentException("password required");
+            }
+
             return new User(name, email, passwordHash, userRole);
         }
-    
-}
+
+    }
 }
