@@ -1,0 +1,90 @@
+<div class="p-6 pt-28 pb-20 max-w-5xl mx-auto">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Questions</h1>
+
+    <button (click)="addFormElement.classList.toggle('hidden')"
+      class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+      + Add Question
+    </button>
+  </div>
+
+  <!-- Add Question Form -->
+  <div #addFormElement id="addForm" class="hidden bg-white rounded-xl shadow p-6 mb-8">
+
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Add New Question</h2>
+
+    <form [formGroup]="questionForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+      <!-- Title -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Title</label>
+        <input type="text" placeholder="Question title" formControlName="title"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
+        <span *ngIf="questionForm.get('title')?.touched && questionForm.get('title')?.errors"
+          class="text-red-600 text-sm">Required</span>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Description</label>
+        <textarea placeholder="Optional description" formControlName="description"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"></textarea>
+      </div>
+
+      <!-- Question Type -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Question Type</label>
+        <select formControlName="questionType"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
+          <option value="0">Text</option>
+          <option value="1">Multiple Choice</option>
+          <option value="2">Slider</option>
+          <option value="3">Rating (Stars)</option>
+        </select>
+      </div>
+
+      <!-- Required -->
+      <div class="flex items-center space-x-2">
+        <input type="checkbox" formControlName="isRequired" class="w-4 h-4 text-indigo-600">
+        <label class="text-gray-700 font-medium">Required</label>
+      </div>
+
+      <!-- Submit -->
+      <button [disabled]="questionForm.invalid"
+        class="disabled:bg-gray-400 px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow">
+        Save Question
+      </button>
+
+    </form>
+  </div>
+
+  <!-- Existing Questions -->
+  <h2 class="text-xl font-semibold text-gray-800 mb-4">Existing Questions</h2>
+
+  <div class="space-y-4">
+
+    <div *ngFor="let question of questions; let i = index"
+      class="bg-white p-5 rounded-xl shadow transition hover:shadow-md">
+      <div class="flex justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">{{question.title}}</h3>
+          <p class="text-gray-600 text-sm">{{question.description}}</p>
+          <span class="inline-block mt-2 px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
+            {{question.questionType}} {{question.isRequired ? '• Required' : ''}}
+            Status {{question.status}}
+          </span>
+        </div>
+
+        <div class="flex items-start space-x-3">
+          <button (click)="toggleStatus(question.id)" class="text-indigo-600 hover:cursor-pointer">Edit Status</button>
+          <button (click)="onEdit(question, addFormElement)" class="text-indigo-600 hover:cursor-pointer">Edit</button>
+          <button class="text-red-600 hover:cursor-pointer">Delete</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

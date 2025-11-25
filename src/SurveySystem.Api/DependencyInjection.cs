@@ -9,6 +9,7 @@ public static class DependencyInjection
     {
         services
             .AddIdentity()
+             .AddConfiguredCors(configuration)
             .AddSwagger();
         return services;
     }
@@ -55,5 +56,38 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddHttpContextAccessor();
         return services;
+    }
+
+    public static IServiceCollection AddConfiguredCors(this IServiceCollection services, IConfiguration configuration)
+    {
+        var origins = configuration
+        .GetSection("Cors:AllowedOrigins")
+        .Get<string[]>() ?? Array.Empty<string>();
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("survey-system", policy =>
+            {
+                policy
+                    .WithOrigins(origins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
+        return services;
+    }
+
+    public static IApplicationBuilder UseCoreMiddlewares(this IApplicationBuilder app, IConfiguration configuration)
+    {
+        app.UseHttpsRedirection();
+
+        app.UseCors("survey-system");
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
+
+        return app;
     }
 }

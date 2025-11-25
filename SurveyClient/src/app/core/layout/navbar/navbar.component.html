@@ -1,0 +1,44 @@
+<nav class="bg-white shadow fixed top-0 left-0 w-full z-50">
+  <div class="max-w-full mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <span class="text-2xl font-bold text-indigo-600">Survey<span class="text-gray-800">System</span></span>
+    </div>
+
+    <div *ngIf="auth.isLoggedIn()" class="hidden md:flex items-center space-x-6 text-gray-700">
+      <a routerLink="/home" class="hover:text-indigo-600">Home</a>
+      <a routerLink="/questions" class="hover:text-indigo-600">Questions</a>
+      <a routerLink="/surveys" class="hover:text-indigo-600">Surveys</a>
+      <a routerLink="/users" class="hover:text-indigo-600">Users</a>
+      <div class="flex items-center space-x-4">
+        <span class="py-1 text-indigo-700">
+          Hello Aya
+        </span>
+        <button (click)="onLogout()"
+          class="px-4 py-1 bg-indigo-200 rounded-full hover:bg-indigo-600 transition hover:cursor-pointer hover:text-white">
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+
+    <button class="md:hidden" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
+      <svg class="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white shadow border-t">
+    <ul class="px-6 py-4 space-y-4">
+      <li><a routerLink="/home" class="block hover:text-indigo-600">Home</a></li>
+      <li><a routerLink="/questions" class="block hover:text-indigo-600">Questions</a></li>
+      <li><a routerLink="/surveys" class="block hover:text-indigo-600">Surveys</a></li>
+      <li><a routerLink="/users" class="block hover:text-indigo-600">Users</a></li>
+      <li><button (click)="onLogout()"
+          class="px-4 py-1 block bg-indigo-200 rounded-full hover:bg-indigo-600 transition hover:cursor-pointer hover:text-white">Logout</button>
+      </li>
+    </ul>
+  </div>
+</nav>

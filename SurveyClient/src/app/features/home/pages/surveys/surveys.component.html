@@ -1,0 +1,146 @@
+<!-- ===== SURVEYS PAGE ===== -->
+<div class="p-6 pt-28 pb-20 max-w-5xl mx-auto">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Surveys</h1>
+
+    <button onclick="document.getElementById('addSurveyForm').classList.toggle('hidden')"
+      class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+      + Create Survey
+    </button>
+  </div>
+
+  <!-- Add Survey Form -->
+  <div id="addSurveyForm" class="hidden bg-white rounded-xl shadow p-6 mb-8">
+
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Create New Survey</h2>
+
+    <form class="space-y-4">
+
+      <!-- Title -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Survey Title</label>
+        <input type="text" placeholder="Enter survey title"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Description</label>
+        <textarea placeholder="Survey description"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"></textarea>
+      </div>
+
+      <!-- Select Questions -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Select Questions</label>
+
+        <div class="space-y-3">
+
+          <!-- Question Row -->
+          <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
+            <div class="flex items-center space-x-2">
+              <input type="checkbox" class="w-4 h-4 text-indigo-600">
+              <span class="text-gray-800 font-medium">What is your age?</span>
+            </div>
+            <input type="number" min="1" placeholder="Order"
+              class="w-20 px-2 py-1 border border-gray-300 rounded-lg focus:ring-indigo-400">
+          </div>
+
+          <!-- Question Row -->
+          <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
+            <div class="flex items-center space-x-2">
+              <input type="checkbox" class="w-4 h-4 text-indigo-600">
+              <span class="text-gray-800 font-medium">How satisfied are you with our service?</span>
+            </div>
+            <input type="number" min="1" placeholder="Order"
+              class="w-20 px-2 py-1 border border-gray-300 rounded-lg focus:ring-indigo-400">
+          </div>
+
+          <!-- Question Row -->
+          <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
+            <div class="flex items-center space-x-2">
+              <input type="checkbox" class="w-4 h-4 text-indigo-600">
+              <span class="text-gray-800 font-medium">Which features do you use the most?</span>
+            </div>
+            <input type="number" min="1" placeholder="Order"
+              class="w-20 px-2 py-1 border border-gray-300 rounded-lg focus:ring-indigo-400">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow">
+        Save Survey
+      </button>
+
+    </form>
+  </div>
+
+  <!-- Existing Surveys -->
+  <h2 class="text-xl font-semibold text-gray-800 mb-4">Existing Surveys</h2>
+
+  <div class="space-y-4">
+
+    <!-- Survey Card -->
+    <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
+      <div class="flex justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">Customer Satisfaction Survey</h3>
+          <p class="text-gray-600 text-sm mt-1">Measures satisfaction levels across services.</p>
+
+          <span class="inline-block mt-3 px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
+            10 Questions
+          </span>
+        </div>
+
+        <div class="flex items-start space-x-3">
+          <button class="text-indigo-600 hover:underline">Edit</button>
+          <button class="text-red-600 hover:underline">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Survey Card -->
+    <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
+      <div class="flex justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">Employee Engagement Survey</h3>
+          <p class="text-gray-600 text-sm mt-1">Helps understand employee motivation.</p>
+
+          <span class="inline-block mt-3 px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
+            7 Questions
+          </span>
+        </div>
+
+        <div class="flex items-start space-x-3">
+          <button class="text-indigo-600 hover:underline">Edit</button>
+          <button class="text-red-600 hover:underline">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Survey Card -->
+    <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
+      <div class="flex justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">Course Evaluation Survey</h3>
+          <p class="text-gray-600 text-sm mt-1">Collects student feedback at semester end.</p>
+
+          <span class="inline-block mt-3 px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
+            12 Questions
+          </span>
+        </div>
+
+        <div class="flex items-start space-x-3">
+          <button class="text-indigo-600 hover:underline">Edit</button>
+          <button class="text-red-600 hover:underline">Delete</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

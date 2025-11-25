@@ -1,0 +1,116 @@
+<!-- ===== USERS PAGE ===== -->
+<div class="p-6 pt-28 pb-20 max-w-5xl mx-auto">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Users</h1>
+
+    <button onclick="document.getElementById('addUserForm').classList.toggle('hidden')"
+      class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+      + Add User
+    </button>
+  </div>
+
+  <!-- Add User Form -->
+  <div id="addUserForm" class="hidden bg-white rounded-xl shadow p-6 mb-8">
+
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Add New User</h2>
+
+    <form class="space-y-4">
+
+      <!-- Full Name -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Full Name</label>
+        <input type="text" placeholder="Enter user name"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Email</label>
+        <input type="email" placeholder="Enter email"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
+      </div>
+
+      <!-- Role -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Role</label>
+        <select
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
+          <option>Select role</option>
+          <option>Admin</option>
+          <option>User</option>
+        </select>
+      </div>
+
+      <button class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow">
+        Save User
+      </button>
+
+    </form>
+
+  </div>
+
+  <!-- Existing Users -->
+  <h2 class="text-xl font-semibold text-gray-800 mb-4">Existing Users</h2>
+
+  <div class="bg-white shadow rounded-xl overflow-hidden">
+
+    <table class="w-full text-left">
+
+      <!-- Table Header -->
+      <thead class="border-b border-gray-200 bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 font-semibold text-gray-700">Id</th>
+          <th class="px-6 py-3 font-semibold text-gray-700">Name</th>
+          <th class="px-6 py-3 font-semibold text-gray-700">Email</th>
+          <th class="px-6 py-3 font-semibold text-gray-700">Role</th>
+          <th class="px-6 py-3 font-semibold text-gray-700 text-center">Actions</th>
+        </tr>
+      </thead>
+
+      <!-- Table Body -->
+      <tbody class="divide-y divide-gray-200">
+
+        <!-- Row -->
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4">1</td>
+          <td class="px-6 py-4">Aya Ahmad</td>
+          <td class="px-6 py-4">ayaexample.com</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs">
+              Admin
+            </span>
+          </td>
+          <td class="px-6 py-4 text-center space-x-2">
+            <button
+              class="hover:bg-yellow-500 hover:text-white transition hover:cursor-pointer text-yellow-600 rounded-full bg-yellow-100 px-3 py-1">Edit</button>
+            <button
+              class="hover:bg-red-500 hover:text-white transition hover:cursor-pointer text-red-600 rounded-full bg-red-100 px-3 py-1">Delete</button>
+          </td>
+        </tr>
+
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4">2</td>
+          <td class="px-6 py-4">Omar Saleh</td>
+          <td class="px-6 py-4">omarexample.com</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs">
+              User
+            </span>
+          </td>
+          <td class="px-6 py-4 text-center space-x-2">
+            <button
+              class="hover:bg-yellow-500 hover:text-white transition hover:cursor-pointer text-yellow-600 rounded-full bg-yellow-100 px-3 py-1">Edit</button>
+            <button
+              class="hover:bg-red-500 hover:text-white transition hover:cursor-pointer text-red-600 rounded-full bg-red-100 px-3 py-1">Delete</button>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
