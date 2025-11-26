@@ -9,6 +9,14 @@ namespace SurveySystem.Application.Surveys.Dtos
         DateTime CreatedAt,
         DateTime? LastModifiedDate,
         int QuestionsCount,
-        int ResponsesCount
+        int ResponsesCount,
+        DateTime? StartDate,
+        DateTime? EndDate,
+        List<SurveyQuestionDto> Questions
         );
+
+    public sealed record SurveyQuestionsDto(
+        string Title,
+        int Order
+    );
 }

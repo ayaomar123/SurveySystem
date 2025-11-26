@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
-import { environment } from '../../../../../../environments/environment.development';
 import { Question } from '../interfaces/question';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class QuestionService implements OnInit {
     return this.http.put(`${this.apiUrl}/${Question.id}/edit`, Question);
   }
 
-  updateStatus(id: number) {
+  updateStatus(id: string) {
     return this.http.patch(`${this.apiUrl}/${id}/status`, id);
   }
 }

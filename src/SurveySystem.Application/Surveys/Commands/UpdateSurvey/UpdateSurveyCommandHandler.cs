@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
+using SurveySystem.Domain.Entites.Surveys;
 
 namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
 {
@@ -13,13 +14,11 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
             var userId = user.UserId ?? throw new Exception("User not authenticated");
 
             var survey = await context.Surveys
-                .Include(s => s.SurveyQuestions)
                 .FirstOrDefaultAsync(s => s.Id == request.Id, ct);
 
             if (survey is null)
                 throw new Exception("Survey not found");
 
-            // Delete existing questions from DB
             var existingQuestions = await context.SurveyQuestions
                 .Where(x => x.SurveyId == request.Id)
                 .ToListAsync(ct);
@@ -27,7 +26,6 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
             context.SurveyQuestions.RemoveRange(existingQuestions);
             survey.SurveyQuestions.Clear();
 
-            // Update main survey fields
             survey.Update(
                 request.Title,
                 request.Description,
@@ -36,13 +34,12 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
                 userId
             );
 
-            // Only if status changed
             survey.UpdateStatus(request.Status, userId);
 
-            // Add new questions
             foreach (var q in request.Questions)
             {
-                survey.AddQuestion(q.QuestionId, q.Order);
+                //survey.AddQuestion(q.QuestionId, q.Order);
+                SurveyQuestion.CreateSurveyQuestion(request.Id, q.QuestionId, q.Order);
             }
 
             await context.SaveChangesAsync(ct);

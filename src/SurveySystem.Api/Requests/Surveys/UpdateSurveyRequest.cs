@@ -3,7 +3,7 @@
 namespace SurveySystem.Api.Requests.Surveys
 {
     public sealed record UpdateSurveyRequest(
-        string Title,
+       string Title,
         string? Description,
         SurveyStatus Status,
         DateTime? StartDate,

@@ -20,6 +20,12 @@ namespace SurveySystem.Domain.Entites.Surveys
             Order = order;
         }
 
+
+        public static SurveyQuestion CreateSurveyQuestion(
+            Guid surveyId, Guid questionId, int order)
+        {
+            return new SurveyQuestion(surveyId, questionId, order);
+        }
         public void UpdateOrder(int newOrder)
         {
             Order = newOrder;

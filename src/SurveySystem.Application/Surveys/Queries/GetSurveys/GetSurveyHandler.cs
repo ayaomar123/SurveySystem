@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Application.Surveys.Dtos;
-using System.Linq;
 
 namespace SurveySystem.Application.Surveys.Queries.GetSurveys
 {
-    public class GetSurveyHandler(IAppDbContext context) : IRequestHandler<GetSurveyQuery, List<SurveyDto>>
+    public class GetSurveyHandler(IAppDbContext context)
+        : IRequestHandler<GetSurveyQuery, List<SurveyDto>>
     {
         public async Task<List<SurveyDto>> Handle(GetSurveyQuery request, CancellationToken ct)
         {
@@ -18,7 +18,17 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveys
                     survey.CreatedAt,
                     survey.LastModifiedDate,
                     survey.SurveyQuestions.Count,
-                   0
+                    0, // TODO: replace when Response table is added
+                    survey.StartDate,
+                    survey.EndDate,
+                    survey.SurveyQuestions
+                        .OrderBy(q => q.Order)
+                        .Select(q => new SurveyQuestionDto(
+                            q.Id,
+                            q.Question!.Title,
+                            q.Question!.QuestionType.ToString(),
+                            q.Order
+                        )).ToList()
                 ))
                 .ToListAsync(ct);
 
