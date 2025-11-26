@@ -6,8 +6,25 @@ export interface Question {
   isRequired: boolean;
   status: boolean;
   createdAt: Date | string;
-  /*QuestionChoice: string;
-  SliderConfig: string;
-  StarConfig: string;*/
+  choices?: QuestionChoice[];
+  sliderConfig?: SliderConfig;
+  starConfig?: StarConfig;
 }
+
+export interface QuestionChoice {
+  id?: number;
+  text: string;
+  order: number;
+}
+export interface SliderConfig {
+  min: number;
+  max: number;
+  step: number;
+  unitLabel: string;
+}
+export interface StarConfig {
+  maxStar: number;
+}
+
+
 

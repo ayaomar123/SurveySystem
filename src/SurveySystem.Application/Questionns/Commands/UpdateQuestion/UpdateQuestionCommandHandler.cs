@@ -31,8 +31,11 @@ namespace SurveySystem.Application.Questionns.Commands.UpdateQuestion
 
             if (request.QuestionType == QuestionTypeDto.Radio || request.QuestionType == QuestionTypeDto.Checkbox)
             {
+                if (request.Choices == null || !request.Choices.Any())
+                    throw new ArgumentException("Choices cannot be empty for this question type.");
+
                 question.UpdateChoices(
-                    request.Choices!.Select(c => new QuestionChoice(c.Text, c.Order)).ToList()
+                    request.Choices.Select(c => new QuestionChoice(c.Text, c.Order)).ToList()
                 );
             }
 
@@ -57,7 +60,7 @@ namespace SurveySystem.Application.Questionns.Commands.UpdateQuestion
                 question.Id,
                 question.Title,
                 question.Description,
-                question.QuestionType.ToString(),
+                (int)question.QuestionType,
                 question.IsRequired,
                 question.Status,
                 question.CreatedAt,

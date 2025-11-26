@@ -1,76 +1,91 @@
-import { QuestionService } from './Services/question.service';
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { Question } from './interfaces/question';
+import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { QuestionService } from './Services/question.service';
+import { Question, QuestionChoice } from './interfaces/question';
+import { QuestionTypeNamePipe } from "./pipes/question-type-name.pipe";
 
 @Component({
   selector: 'app-questions',
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, QuestionTypeNamePipe],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.css'
 })
 export class QuestionsComponent implements OnInit {
+
   questions: Question[] = [];
-  questionForm: FormGroup;
+  questionForm!: FormGroup;
   isEditing = false;
 
-  constructor(private fb: FormBuilder, private service: QuestionService) {
+  constructor(private fb: FormBuilder, private service: QuestionService) { }
+
+  ngOnInit() {
+    this.initForm();
+    this.loadQuestions();
+  }
+
+  private initForm() {
     this.questionForm = this.fb.group({
       id: [0],
-      title: ['', [Validators.required]],
+      title: ['', Validators.required],
       description: [''],
-      questionType: [0, [Validators.required]],
-      isRequired: [true],
-      status: [true],
-      createdAt: ['']
+      questionType: [0, Validators.required],
+      isRequired: [false],
+
+      choices: this.fb.array([]),
+
+      maxStar: [null],
+      sliderMin: [null],
+      sliderMax: [null],
+      sliderStep: [null],
+      sliderUnit: ['']
     });
   }
 
-  ngOnInit() {
-    this.loadQuestions();
+  get choices() {
+    return this.questionForm.get('choices') as FormArray;
+  }
+
+  addChoice() {
+    this.choices.push(new FormGroup({
+      text: new FormControl('',),
+      order: new FormControl(1)
+    }));
+  }
+
+  removeChoice(i: number) {
+    this.choices.removeAt(i);
   }
 
   loadQuestions() {
     this.service.loadQuestions().subscribe({
-      next: (questions: Question[]) => {
-        this.questions = questions;
-      },
+      next: questions => this.questions = questions
     });
   }
 
   onSubmit() {
-    const Question = this.questionForm.value;
-    if (Question.id === 0) {
-      this.service.createQuestion(Question).subscribe({
-        next: res => {
-          this.loadQuestions();
-          this.questionForm.reset({
-            questionType: 0,
-            isRequired: false
-          });
-        },
-      });
-    } else {
-      this.service.updateQuestion(Question).subscribe({
-        next: res => {
-          this.loadQuestions();
-          this.isEditing = false;
+    const dto = this.questionForm.value;
 
-          this.questionForm.reset({
-            questionType: 0,
-            isRequired: false
-          });
-        },
-      });
-    }
+    const request$ =
+      dto.id === 0
+        ? this.service.createQuestion(dto)
+        : this.service.updateQuestion(dto);
+
+    request$.subscribe({
+      next: () => {
+        this.loadQuestions();
+        this.clearForm();
+      }
+    });
   }
-  onEdit(question: Question, addFormElement: HTMLElement) {
-    console.log('Editing question:', question);
-    addFormElement.classList.remove('hidden');
 
+  onEdit(question: Question, formElement: HTMLElement) {
     this.isEditing = true;
+    console.log(question);
+    formElement.classList.remove('hidden');
+
+    this.clearForm();
 
     this.questionForm.patchValue({
       id: question.id,
@@ -78,18 +93,48 @@ export class QuestionsComponent implements OnInit {
       description: question.description,
       questionType: question.questionType,
       isRequired: question.isRequired,
-      status: question.status,
-      createdAt: question.createdAt
+      maxStar: question.starConfig?.maxStar ?? null,
+      sliderMin: question.sliderConfig?.min ?? null,
+      sliderMax: question.sliderConfig?.max ?? null,
+      sliderStep: question.sliderConfig?.step ?? null,
+      sliderUnit: question.sliderConfig?.unitLabel ?? ''
     });
 
+    if (question.choices?.length) {
+      question.choices.forEach(opt => {
+        this.choices.push(
+          this.fb.group({
+            text: [opt.text],
+            order: [opt.order]
+          })
+        );
+      });
+    }
   }
 
   toggleStatus(id: number) {
     this.service.updateStatus(id).subscribe({
-      next: res => {
-        this.loadQuestions();
-      }
+      next: () => this.loadQuestions()
     });
   }
 
+  clearForm() {
+    this.isEditing = false;
+
+    this.questionForm.reset({
+      id: 0,
+      title: '',
+      description: '',
+      questionType: 0,
+      isRequired: false,
+
+      maxStar: null,
+      sliderMin: null,
+      sliderMax: null,
+      sliderStep: null,
+      sliderUnit: ''
+    });
+
+    this.choices.clear();
+  }
 }

@@ -6,7 +6,7 @@ namespace SurveySystem.Application.Questionns.Dtos
         Guid Id,
         string Title,
         string? Description,
-        string QuestionType,
+        int QuestionType,
         bool IsRequired,
         bool Status,
         DateTime CreatedAt,

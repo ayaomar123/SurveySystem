@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Application.Questionns.Dtos;
+using System.Linq;
 
 namespace SurveySystem.Application.Questionns.Queries.GetQuestions
 {
@@ -16,7 +17,7 @@ namespace SurveySystem.Application.Questionns.Queries.GetQuestions
                 .Select(question => new QuestionResponseDto(question.Id,
                                                             question.Title,
                                                             question.Description,
-                                                            question.QuestionType.ToString(),
+                                                            (int)question.QuestionType,
                                                             question.IsRequired,
                                                             question.Status,
                                                             question.CreatedAt,
