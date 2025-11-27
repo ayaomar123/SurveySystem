@@ -39,11 +39,6 @@ namespace SurveySystem.Infrastructure.Configurations
             builder.Property(s => s.LastModifiedBy)
                 .IsRequired(false);
 
-            builder.HasMany(s => s.SurveyQuestions)
-                   .WithOne()
-                   .HasForeignKey(sq => sq.SurveyId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasOne(s => s.CreatedByUser)
                    .WithMany()
                    .HasForeignKey(s => s.CreatedBy)
@@ -54,10 +49,6 @@ namespace SurveySystem.Infrastructure.Configurations
                    .HasForeignKey(s => s.LastModifiedBy)
                    .OnDelete(DeleteBehavior.NoAction);
 
-            builder
-                .HasMany(q => q.SurveyQuestions)
-                .WithOne().HasForeignKey(c => c.SurveyId)
-                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

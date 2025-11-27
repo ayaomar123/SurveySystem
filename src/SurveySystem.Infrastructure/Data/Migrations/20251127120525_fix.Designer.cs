@@ -12,8 +12,8 @@ using SurveySystem.Infrastructure;
 namespace SurveySystem.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251124101634_FixQuestions")]
-    partial class FixQuestions
+    [Migration("20251127120525_fix")]
+    partial class fix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -280,18 +280,20 @@ namespace SurveySystem.Infrastructure.Data.Migrations
             modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.SurveyQuestion", b =>
                 {
                     b.HasOne("SurveySystem.Domain.Entites.Questions.Question", "Question")
-                        .WithMany()
+                        .WithMany("SurveyQuestions")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SurveySystem.Domain.Entites.Surveys.Survey", null)
+                    b.HasOne("SurveySystem.Domain.Entites.Surveys.Survey", "Survey")
                         .WithMany("SurveyQuestions")
                         .HasForeignKey("SurveyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Question");
+
+                    b.Navigation("Survey");
                 });
 
             modelBuilder.Entity("SurveySystem.Domain.Entites.Questions.Question", b =>
@@ -301,6 +303,8 @@ namespace SurveySystem.Infrastructure.Data.Migrations
                     b.Navigation("SliderConfig");
 
                     b.Navigation("StarConfig");
+
+                    b.Navigation("SurveyQuestions");
                 });
 
             modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Survey", b =>

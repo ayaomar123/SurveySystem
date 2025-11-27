@@ -18,15 +18,16 @@ export class QuestionService implements OnInit {
     return this.http.get<Question[]>(this.apiUrl);
   }
 
-  createQuestion(Question: Question) {
-    return this.http.post(this.apiUrl, Question);
+  createQuestion(question: Question) {
+    return this.http.post(this.apiUrl, question);
   }
 
-  updateQuestion(Question: Question) {
-    return this.http.put(`${this.apiUrl}/${Question.id}/edit`, Question);
+  updateQuestion(id: number, question: Question) {
+    console.log("Updating question with ID:", question.id);
+    return this.http.put(`${this.apiUrl}/${id}/edit`, question);
   }
 
-  updateStatus(id: string) {
+  updateStatus(id: number) {
     return this.http.patch(`${this.apiUrl}/${id}/status`, id);
   }
 }

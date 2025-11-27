@@ -1,3 +1,4 @@
+import { StarConfig } from './../questions/interfaces/question';
 import { Survey, SurveyCreate, SurveyQuestionOrder } from './interfaces/survey';
 import { Component, OnInit } from '@angular/core';
 import { SurveyService } from './services/survey.service';
@@ -58,7 +59,7 @@ export class SurveysComponent implements OnInit {
       status: Number(this.addForm.value.status),
       startDate: this.addForm.value.startDate,
       endDate: this.addForm.value.endDate,
-      questions: this.selectedQuestions
+      questions: this.selectedQuestions,
     };
     console.log(data)
 

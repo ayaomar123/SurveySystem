@@ -14,17 +14,25 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
             var userId = user.UserId ?? throw new Exception("User not authenticated");
 
             var survey = await context.Surveys
+                .Include(s => s.SurveyQuestions)
                 .FirstOrDefaultAsync(s => s.Id == request.Id, ct);
 
             if (survey is null)
                 throw new Exception("Survey not found");
 
-            var existingQuestions = await context.SurveyQuestions
-                .Where(x => x.SurveyId == request.Id)
-                .ToListAsync(ct);
+            foreach (var sq in survey.SurveyQuestions.ToList())
+            {
+                context.SurveyQuestions.Remove(sq);
+            }
 
-            context.SurveyQuestions.RemoveRange(existingQuestions);
             survey.SurveyQuestions.Clear();
+
+            foreach (var q in request.Questions)
+            {
+                survey.SurveyQuestions.Add(
+                    new SurveyQuestion(survey.Id, q.QuestionId, q.Order)
+                );
+            }
 
             survey.Update(
                 request.Title,
@@ -36,12 +44,12 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
 
             survey.UpdateStatus(request.Status, userId);
 
-            foreach (var q in request.Questions)
+            /*foreach (var q in request.Questions)
             {
-                //survey.AddQuestion(q.QuestionId, q.Order);
                 SurveyQuestion.CreateSurveyQuestion(request.Id, q.QuestionId, q.Order);
-            }
+            }*/
 
+            
             await context.SaveChangesAsync(ct);
 
             return Unit.Value;

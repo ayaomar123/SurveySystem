@@ -1,5 +1,5 @@
 export interface Question {
-  id: string;
+  id: number;
   title: string;
   description: string;
   questionType: number;
@@ -7,7 +7,7 @@ export interface Question {
   status: boolean;
   createdAt: Date | string;
   choices?: QuestionChoice[];
-  sliderConfig?: SliderConfig;
+  sliderConfig?: Config;
   starConfig?: StarConfig;
 }
 
@@ -16,7 +16,7 @@ export interface QuestionChoice {
   text: string;
   order: number;
 }
-export interface SliderConfig {
+export interface Config {
   min: number;
   max: number;
   step: number;

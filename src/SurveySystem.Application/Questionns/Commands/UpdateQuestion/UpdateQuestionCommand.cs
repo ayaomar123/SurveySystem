@@ -4,7 +4,8 @@ using SurveySystem.Application.Questions.Dtos;
 
 namespace SurveySystem.Application.Questionns.Commands.UpdateQuestion
 {
-    public sealed record UpdateQuestionCommand(Guid Id,
+    public sealed record UpdateQuestionCommand(
+        Guid Id,
         string Title,
         string? Description,
         QuestionTypeDto QuestionType,

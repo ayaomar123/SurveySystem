@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using Azure.Core;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SurveySystem.Api.Requests.Questions;
 using SurveySystem.Application.Questionns.Commands.CreateQuestion;
 using SurveySystem.Application.Questionns.Commands.UpdateQuestion;
 using SurveySystem.Application.Questionns.Commands.UpdateQuestionStatus;
@@ -29,11 +31,24 @@ namespace SurveySystem.Api.Controllers
         }
 
         [HttpPut("{id}/edit")]
-        public async Task<IActionResult> Edit(UpdateQuestionCommand command)
+        public async Task<IActionResult> Edit(Guid id, 
+            [FromBody] UpdateQuestionRequest request)
         {
-            var result = await mediator.Send(command);
+            var command = new UpdateQuestionCommand(
+                id,
+                request.Title,
+                request.Description,
+                request.QuestionType,
+                request.IsRequired,
+                request.Status,
+                request.Choices,
+                request.Config,
+                request.StarConfig
+                );
+            
+            await mediator.Send(command);
 
-            return Ok(new { updated = true });
+            return NoContent();
         }
 
         [HttpPatch("{id}/status")]

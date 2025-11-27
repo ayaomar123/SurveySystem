@@ -1,4 +1,5 @@
 ﻿using SurveySystem.Domain.Entites.Questions.Enums;
+using SurveySystem.Domain.Entites.Surveys;
 
 namespace SurveySystem.Domain.Entites.Questions
 {
@@ -11,7 +12,7 @@ namespace SurveySystem.Domain.Entites.Questions
         public bool IsRequired { get; private set; }
         public bool Status { get; private set; } = true;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
-
+        public List<SurveyQuestion> SurveyQuestions { get; private set; } = new();
         public List<QuestionChoice> Choices { get; private set; } = new();
         public SliderConfig? SliderConfig { get; private set; }
         public StarConfig? StarConfig { get; private set; }

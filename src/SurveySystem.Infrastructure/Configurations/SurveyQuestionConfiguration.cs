@@ -19,15 +19,16 @@ namespace SurveySystem.Infrastructure.Persistence.Configurations
             builder.Property(sq => sq.Order)
                 .IsRequired();
 
-            builder.HasOne<Survey>()
-                   .WithMany(s => s.SurveyQuestions)
-                   .HasForeignKey(sq => sq.SurveyId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(sq => sq.Survey)
+               .WithMany(s => s.SurveyQuestions)
+               .HasForeignKey(sq => sq.SurveyId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(sq => sq.Question)
-                   .WithMany()
+                   .WithMany(q => q.SurveyQuestions)
                    .HasForeignKey(sq => sq.QuestionId)
                    .OnDelete(DeleteBehavior.Restrict);
+
 
         }
     }

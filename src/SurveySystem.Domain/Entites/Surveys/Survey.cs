@@ -35,7 +35,6 @@ namespace SurveySystem.Domain.Entites.Surveys
             Status = status;
             StartDate = startDate;
             EndDate = endDate;
-
             CreatedAt = DateTime.UtcNow;
             CreatedBy = createdBy;
         }
@@ -77,15 +76,5 @@ namespace SurveySystem.Domain.Entites.Surveys
         {
             SurveyQuestions.Add(new SurveyQuestion(Id, questionId, order));
         }
-
-        public void RemoveAllQuestions()
-        {
-            foreach (var question in SurveyQuestions.ToList())
-            {
-                SurveyQuestions.Remove(question);
-            }
-        }
-
-
     }
 }

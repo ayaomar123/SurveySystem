@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QuestionService } from './Services/question.service';
-import { Question, QuestionChoice } from './interfaces/question';
+import { Question } from './interfaces/question';
 import { QuestionTypeNamePipe } from "./pipes/question-type-name.pipe";
 
 @Component({
@@ -35,11 +35,16 @@ export class QuestionsComponent implements OnInit {
 
       choices: this.fb.array([]),
 
-      maxStar: [null],
-      sliderMin: [null],
-      sliderMax: [null],
-      sliderStep: [null],
-      sliderUnit: ['']
+      starConfig: this.fb.group({
+        maxStar: [null]
+      }),
+
+      config: this.fb.group({
+        min: [null],
+        max: [null],
+        step: [null],
+        unitLabel: [null]
+      })
     });
   }
 
@@ -48,10 +53,12 @@ export class QuestionsComponent implements OnInit {
   }
 
   addChoice() {
-    this.choices.push(new FormGroup({
-      text: new FormControl('',),
-      order: new FormControl(1)
-    }));
+    this.choices.push(
+      this.fb.group({
+        text: [''],
+        order: [1]
+      })
+    );
   }
 
   removeChoice(i: number) {
@@ -67,12 +74,37 @@ export class QuestionsComponent implements OnInit {
   onSubmit() {
     const dto = this.questionForm.value;
 
-    const request$ =
-      dto.id === 0
-        ? this.service.createQuestion(dto)
-        : this.service.updateQuestion(dto);
+    let payload: any = {
+      title: dto.title,
+      description: dto.description,
+      isRequired: dto.isRequired,
+      questionType: Number(dto.questionType),
+    };
 
-    request$.subscribe({
+    if (dto.questionType == 1 || dto.questionType == 2) {
+      payload.choices = dto.choices;
+    }
+    if (dto.questionType == 4) {
+      payload.starConfig = {
+        maxStar: dto.starConfig.maxStar
+      };
+    }
+
+    if (dto.questionType == 5) {
+      payload.config = {
+        min: dto.config.min,
+        max: dto.config.max,
+        step: dto.config.step,
+        unitLabel: dto.config.unitLabel
+      };
+    }
+
+    const request =
+      dto.id === 0
+        ? this.service.createQuestion(payload)
+        : this.service.updateQuestion(dto.id, payload);
+
+    request.subscribe({
       next: () => {
         this.loadQuestions();
         this.clearForm();
@@ -81,8 +113,8 @@ export class QuestionsComponent implements OnInit {
   }
 
   onEdit(question: Question, formElement: HTMLElement) {
+    console.log("Editing Question:", question);
     this.isEditing = true;
-    console.log(question);
     formElement.classList.remove('hidden');
 
     this.clearForm();
@@ -93,13 +125,19 @@ export class QuestionsComponent implements OnInit {
       description: question.description,
       questionType: question.questionType,
       isRequired: question.isRequired,
-      maxStar: question.starConfig?.maxStar ?? null,
-      sliderMin: question.sliderConfig?.min ?? null,
-      sliderMax: question.sliderConfig?.max ?? null,
-      sliderStep: question.sliderConfig?.step ?? null,
-      sliderUnit: question.sliderConfig?.unitLabel ?? ''
+      starConfig: {
+        maxStar: question.starConfig?.maxStar ?? null
+      },
+      config: {
+        min: question.sliderConfig?.min ?? null,
+        max: question.sliderConfig?.max ?? null,
+        step: question.sliderConfig?.step ?? null,
+        unitLabel: question.sliderConfig?.unitLabel ?? null
+      }
     });
 
+
+    console.log(this.questionForm.value.id);
     if (question.choices?.length) {
       question.choices.forEach(opt => {
         this.choices.push(
@@ -112,7 +150,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  toggleStatus(id: string) {
+  toggleStatus(id: number) {
     this.service.updateStatus(id).subscribe({
       next: () => this.loadQuestions()
     });
@@ -128,11 +166,16 @@ export class QuestionsComponent implements OnInit {
       questionType: 0,
       isRequired: false,
 
-      maxStar: null,
-      sliderMin: null,
-      sliderMax: null,
-      sliderStep: null,
-      sliderUnit: ''
+      starConfig: {
+        maxStar: null
+      },
+
+      config: {
+        min: null,
+        max: null,
+        step: null,
+        unitLabel: null
+      }
     });
 
     this.choices.clear();

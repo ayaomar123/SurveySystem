@@ -61,32 +61,31 @@
 
       </div>
 
-
-      <div *ngIf="questionForm.get('questionType')?.value == 4">
+      <div *ngIf="questionForm.get('questionType')?.value == 4" formGroupName="starConfig">
         <label class="block text-gray-700 font-medium mb-1">Max Stars</label>
         <input type="number" formControlName="maxStar" class="w-40 px-3 py-2 border rounded-lg">
       </div>
 
-      <div *ngIf="questionForm.get('questionType')?.value == 5" class="space-y-3">
+      <div *ngIf="questionForm.get('questionType')?.value == 5" formGroupName="config" class="space-y-3">
 
         <div>
           <label class="block text-gray-700 font-medium mb-1">Min</label>
-          <input type="number" formControlName="sliderMin" class="w-40 px-3 py-2 border rounded-lg">
+          <input type="number" formControlName="min" class="w-40 px-3 py-2 border rounded-lg">
         </div>
 
         <div>
           <label class="block text-gray-700 font-medium mb-1">Max</label>
-          <input type="number" formControlName="sliderMax" class="w-40 px-3 py-2 border rounded-lg">
+          <input type="number" formControlName="max" class="w-40 px-3 py-2 border rounded-lg">
         </div>
 
         <div>
           <label class="block text-gray-700 font-medium mb-1">Step</label>
-          <input type="number" formControlName="sliderStep" class="w-40 px-3 py-2 border rounded-lg">
+          <input type="number" formControlName="step" class="w-40 px-3 py-2 border rounded-lg">
         </div>
 
         <div>
           <label class="block text-gray-700 font-medium mb-1">Unit Label</label>
-          <input type="text" formControlName="sliderUnit" class="w-40 px-3 py-2 border rounded-lg">
+          <input type="text" formControlName="unitLabel" class="w-40 px-3 py-2 border rounded-lg">
         </div>
 
       </div>
@@ -102,7 +101,6 @@
       </button>
 
     </form>
-
   </div>
 
   <h2 class="text-xl font-semibold text-gray-800 mb-4">Existing Questions</h2>
@@ -110,22 +108,20 @@
   <div class="space-y-4">
 
     <div *ngFor="let question of questions" class="bg-white p-5 rounded-xl shadow hover:shadow-md">
+
       <div class="flex justify-between">
         <div>
-          <h3 class="text-lg font-bold text-gray-800">{{question.title}}
-            <span class="inline-block mt-3 px-3 py-1 text-xs rounded-full"
-              [ngClass]="question.status ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'">
-              {{question.status ? "Active" : "Disabled"}}
-            </span>
-          </h3>
+          <h3 class="text-lg font-bold text-gray-800">{{question.title}}</h3>
           <p class="text-gray-600 text-sm">{{question.description}}</p>
-
 
           <span class="inline-block mt-3 px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
             {{question.questionType | questionTypeName}}
           </span>
 
-
+          <span class="inline-block mt-3 px-3 py-1 text-xs rounded-full"
+            [ngClass]="question.status ? 'bg-red-100 text-red-700' : 'bg-gray-200 text-gray-400'">
+            {{question.status ? "Active" : "Disabled"}}
+          </span>
 
           <span *ngIf="question.isRequired"
             class="inline-block mt-3 px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full">
@@ -135,16 +131,23 @@
 
         <div class="flex items-start space-x-3">
           <button title="Toggle Status" (click)="toggleStatus(question.id)"
-            class="inline-block mt-3 px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full">Toggle
-            Status</button>
-          <button (click)="onEdit(question, addFormElement)"
-            class="inline-block mt-3 px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">Edit</button>
-        </div>
+            class="inline-block mt-3 px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full">
+            Toggle Status
+          </button>
 
+          <button (click)="onEdit(question, addFormElement)"
+            class="inline-block mt-3 px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
+            Edit
+          </button>
+
+
+        </div>
       </div>
 
       <hr class="border-gray-300 my-4">
-      <p class="text-gray-500 text-sm">Created At: {{question.createdAt | date:'medium'}}</p>
+      <p class="text-gray-500 text-sm">
+        Created At: {{question.createdAt | date:'medium'}}
+      </p>
     </div>
 
   </div>

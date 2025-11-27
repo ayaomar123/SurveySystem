@@ -5,7 +5,7 @@
 namespace SurveySystem.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Fixes : Migration
+    public partial class fix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
