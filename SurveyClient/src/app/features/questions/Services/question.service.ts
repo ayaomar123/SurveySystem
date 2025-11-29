@@ -27,7 +27,7 @@ export class QuestionService implements OnInit {
     return this.http.put(`${this.apiUrl}/${id}/edit`, question);
   }
 
-  updateStatus(id: number) {
+  updateStatus(id: string) {
     return this.http.patch(`${this.apiUrl}/${id}/status`, id);
   }
 }

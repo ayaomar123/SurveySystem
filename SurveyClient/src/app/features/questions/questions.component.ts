@@ -150,7 +150,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
-  toggleStatus(id: number) {
+  toggleStatus(id: string) {
     this.service.updateStatus(id).subscribe({
       next: () => this.loadQuestions()
     });

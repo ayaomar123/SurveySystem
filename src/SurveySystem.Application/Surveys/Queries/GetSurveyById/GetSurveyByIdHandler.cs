@@ -23,7 +23,7 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveyById
             var questions = survey.SurveyQuestions
                 .OrderBy(q => q.Order)
                 .Select(q => new SurveyQuestionDto(
-                    //q.QuestionId,
+                    q.QuestionId,
                     q.Question!.Title,
                     (int)q.Question.QuestionType,
                     q.Order

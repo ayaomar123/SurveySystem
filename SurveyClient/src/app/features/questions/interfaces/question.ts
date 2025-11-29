@@ -1,5 +1,5 @@
 export interface Question {
-  id: number;
+  id: string;
   title: string;
   description: string;
   questionType: number;
@@ -12,7 +12,7 @@ export interface Question {
 }
 
 export interface QuestionChoice {
-  id?: number;
+  id?: string;
   text: string;
   order: number;
 }

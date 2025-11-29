@@ -27,7 +27,8 @@ export class SurveyService {
     return this.http.post(this.apiUrl, data);
   }
 
-  updateSurvey(data: SurveyCreate) {
-    return this.http.put(`${this.apiUrl}/${data.id}/edit`, data);
+  updateSurvey(id: number, data: SurveyCreate) {
+    console.log("Updating question with ID:", data.id);
+    return this.http.put(`${this.apiUrl}/${id}`, data);
   }
 }
