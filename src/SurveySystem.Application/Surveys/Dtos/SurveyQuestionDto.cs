@@ -1,9 +1,9 @@
 ﻿namespace SurveySystem.Application.Surveys.Dtos
 {
     public sealed record SurveyQuestionDto(
-        Guid QuestionId,
+        //Guid QuestionId,
         string Title,
-        string QuestionType,
+        int QuestionType,
         int Order
     );
 }

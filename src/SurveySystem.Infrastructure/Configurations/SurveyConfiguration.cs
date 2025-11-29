@@ -49,6 +49,10 @@ namespace SurveySystem.Infrastructure.Configurations
                    .HasForeignKey(s => s.LastModifiedBy)
                    .OnDelete(DeleteBehavior.NoAction);
 
+            builder.HasMany(s => s.SurveyQuestions)
+                   .WithOne(sq => sq.Survey)
+                   .HasForeignKey(sq => sq.SurveyId);
+
 
         }
     }

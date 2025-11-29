@@ -69,7 +69,9 @@ namespace SurveySystem.Api.Controllers
         {
             var command = new UpdateSurveyStatusCommand(
                 id,
-                request.Status
+                request.Status,
+                request.StartDate,
+                request.EndDate
             );
             var updatedSurvey = await mediator.Send(command);
             return Ok(updatedSurvey);

@@ -17,7 +17,7 @@ namespace SurveySystem.Domain.Entites.Surveys
         public User? CreatedByUser { get; private set; }
         public Guid? LastModifiedBy { get; private set; }
         public User? LastModifiedByUser { get; private set; }
-        public List<SurveyQuestion> SurveyQuestions { get; private set; } = new();
+        public ICollection<SurveyQuestion> SurveyQuestions { get; private set; } = new List<SurveyQuestion>();
 
         private Survey() { }
 
@@ -64,11 +64,26 @@ namespace SurveySystem.Domain.Entites.Surveys
             LastModifiedBy = modifiedBy;
             LastModifiedDate = DateTime.UtcNow;
         }
-        public void UpdateStatus(SurveyStatus status, Guid modifiedBy)
+        public void UpdateStatus(
+            SurveyStatus status,
+            Guid modifiedBy,
+            DateTime? startDate = null,
+            DateTime? endDate = null)
         {
             Status = status;
             LastModifiedBy = modifiedBy;
             LastModifiedDate = DateTime.UtcNow;
+
+            if (status == SurveyStatus.Active)
+            {
+                StartDate = startDate!;
+                EndDate = endDate!;
+            }
+            else
+            {
+                StartDate = null;
+                EndDate = null;
+            }
         }
 
         

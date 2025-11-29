@@ -3,6 +3,10 @@ using SurveySystem.Domain.Entites.Surveys.Enums;
 
 namespace SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus
 {
-    public sealed record UpdateSurveyStatusCommand(Guid Id,
-        SurveyStatus Status) : IRequest<Unit>;
+    public sealed record UpdateSurveyStatusCommand(
+        Guid Id,
+        SurveyStatus Status,
+        DateTime? StartDate,
+        DateTime? EndDate
+        ) : IRequest<Unit>;
 }

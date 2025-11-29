@@ -24,9 +24,9 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveys
                     survey.SurveyQuestions
                         .OrderBy(q => q.Order)
                         .Select(q => new SurveyQuestionDto(
-                            q.Id,
+                            //q.Id,
                             q.Question!.Title,
-                            q.Question!.QuestionType.ToString(),
+                            (int)q.Question!.QuestionType,
                             q.Order
                         )).ToList()
                 ))

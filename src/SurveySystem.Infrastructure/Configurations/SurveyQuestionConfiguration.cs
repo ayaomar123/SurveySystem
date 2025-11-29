@@ -8,7 +8,7 @@ namespace SurveySystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<SurveyQuestion> builder)
         {
-            builder.HasKey(sq => sq.Id);
+            //builder.HasKey(sq => sq.Id);
 
             builder.Property(sq => sq.SurveyId)
                 .IsRequired();
@@ -28,6 +28,9 @@ namespace SurveySystem.Infrastructure.Persistence.Configurations
                    .WithMany(q => q.SurveyQuestions)
                    .HasForeignKey(sq => sq.QuestionId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasKey(sq => new { sq.SurveyId, sq.QuestionId }); // Composite key
+
 
 
         }

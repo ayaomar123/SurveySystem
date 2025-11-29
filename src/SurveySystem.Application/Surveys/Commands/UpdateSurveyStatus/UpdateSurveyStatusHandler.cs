@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
+using SurveySystem.Domain.Entites.Surveys.Enums;
 
 namespace SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus
 {
-    public sealed class UpdateSurveyStatusCommandHandler(IAppDbContext context, ICurrentUser user)
+    public sealed class UpdateSurveyStatusCommandHandler
+        (IAppDbContext context, ICurrentUser user)
         : IRequestHandler<UpdateSurveyStatusCommand, Unit>
     {
 
@@ -18,7 +20,11 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus
             if (survey is null)
                 throw new Exception("Survey not found");
 
-            survey.UpdateStatus(request.Status, userId);
+            survey.UpdateStatus(
+                request.Status,
+                userId,
+                request.StartDate,
+                request.EndDate);
 
             await context.SaveChangesAsync(ct);
 

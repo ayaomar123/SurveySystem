@@ -27,6 +27,11 @@ namespace SurveySystem.Infrastructure.Configurations
             builder.HasOne(q => q.SliderConfig).WithOne().HasForeignKey<SliderConfig>(s => s.QuestionId).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(q => q.StarConfig).WithOne().HasForeignKey<StarConfig>(s => s.QuestionId).OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(q => q.SurveyQuestions)
+               .WithOne(sq => sq.Question)
+               .HasForeignKey(sq => sq.QuestionId);
+
         }
     }
 }
