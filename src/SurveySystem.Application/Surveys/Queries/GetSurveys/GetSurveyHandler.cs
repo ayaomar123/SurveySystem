@@ -6,19 +6,19 @@ using SurveySystem.Application.Surveys.Dtos;
 namespace SurveySystem.Application.Surveys.Queries.GetSurveys
 {
     public class GetSurveyHandler(IAppDbContext context)
-        : IRequestHandler<GetSurveyQuery, List<SurveyDto>>
+        : IRequestHandler<GetSurveyQuery, List<SurveysResponseDto>>
     {
-        public async Task<List<SurveyDto>> Handle(GetSurveyQuery request, CancellationToken ct)
+        public async Task<List<SurveysResponseDto>> Handle(GetSurveyQuery request, CancellationToken ct)
         {
             var surveys = await context.Surveys
-                .Select(survey => new SurveyDto(
+                .Select(survey => new SurveysResponseDto(
                     survey.Id,
                     survey.Title,
                     survey.Status,
                     survey.CreatedAt,
                     survey.LastModifiedDate,
                     survey.SurveyQuestions.Count,
-                    0, // TODO: replace when Response table is added
+                    0,
                     survey.StartDate,
                     survey.EndDate,
                     survey.SurveyQuestions
@@ -26,7 +26,6 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveys
                         .Select(q => new SurveyQuestionDto(
                             q.QuestionId,
                             q.Question!.Title,
-                            (int)q.Question!.QuestionType,
                             q.Order
                         )).ToList()
                 ))

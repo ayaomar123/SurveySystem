@@ -14,16 +14,17 @@ namespace SurveySystem.Application.Questionns.Queries.GetQuestions
                 .Include(c => c.Choices)
                 .Include(c => c.SliderConfig)
                 .Include(c => c.StarConfig)
-                .Select(question => new QuestionResponseDto(question.Id,
-                                                            question.Title,
-                                                            question.Description,
-                                                            (int)question.QuestionType,
-                                                            question.IsRequired,
-                                                            question.Status,
-                                                            question.CreatedAt,
-                                                            question.Choices, // بدهم ترتيب
-                                                            question.SliderConfig,
-                                                            question.StarConfig))
+                .Select(question => new QuestionResponseDto(
+                    question.Id,
+                     question.Title,
+                     question.Description,
+                     (int)question.QuestionType,
+                     question.IsRequired,
+                     question.Status,
+                     question.Choices,
+                     question.SliderConfig,
+                     question.StarConfig))
+
                 .ToListAsync(ct);
 
             return questions;

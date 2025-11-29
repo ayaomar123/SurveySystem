@@ -2,7 +2,7 @@
 
 namespace SurveySystem.Application.Surveys.Dtos
 {
-    public sealed record SurveyDto(
+    public sealed record SurveysResponseDto(
         Guid Id,
         string Title,
         SurveyStatus Status,
@@ -15,8 +15,4 @@ namespace SurveySystem.Application.Surveys.Dtos
         List<SurveyQuestionDto> Questions
         );
 
-    public sealed record SurveyQuestionsDto(
-        string Title,
-        int Order
-    );
 }

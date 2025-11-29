@@ -3,7 +3,6 @@
     public sealed record SurveyQuestionDto(
         Guid QuestionId,
         string Title,
-        int QuestionType,
-        int Order
+        int Order 
     );
 }

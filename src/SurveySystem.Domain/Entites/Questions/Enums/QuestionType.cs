@@ -2,11 +2,11 @@
 {
     public enum QuestionType
     {
-        TextInput,
-        Radio,
-        Checkbox,
-        YesOrNo,
-        Rating,
-        Slider
+        TextInput, //0
+        Radio, //1
+        Checkbox, //2
+        YesOrNo, //3
+        Rating, //4 
+        Slider //5
     }
 }

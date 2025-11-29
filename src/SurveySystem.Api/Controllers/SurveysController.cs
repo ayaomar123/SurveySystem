@@ -23,6 +23,7 @@ namespace SurveySystem.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Show(Guid id)
         {
             var questions = await mediator.Send(new GetSurveyByIdQuery(id));

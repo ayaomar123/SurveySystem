@@ -23,6 +23,11 @@ export class SurveyService {
   loadQuestions() {
     return this.http.get<Question[]>(this.apiQuestionsUrl);
   }
+
+  getSurveyById(id: string) {
+    console.log(id)
+    return this.http.get<Survey>(`${this.apiUrl}/${id}`);
+  }
   createSurvey(data: SurveyCreate) {
     return this.http.post(this.apiUrl, data);
   }

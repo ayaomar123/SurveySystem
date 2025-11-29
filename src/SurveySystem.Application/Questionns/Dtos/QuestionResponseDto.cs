@@ -9,7 +9,6 @@ namespace SurveySystem.Application.Questionns.Dtos
         int QuestionType,
         bool IsRequired,
         bool Status,
-        DateTime CreatedAt,
         List<QuestionChoice>? Choices,
         SliderConfig? SliderConfig,
         StarConfig? StarConfig

@@ -22,6 +22,7 @@ export const routes: Routes = [
     path: 'surveys/:id',
     loadComponent: () => import('./features/surveys/details/details.component').then(mod => mod.DetailsComponent),
     canActivate: [authGuard],
+    data: { noLayout: true }
   },
   {
     path: 'users',

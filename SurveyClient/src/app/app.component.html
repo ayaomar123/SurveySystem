@@ -1,7 +1,15 @@
-<app-navbar></app-navbar>
-
-<div class="bg-gray-100 min-h-screen flex flex-col">
+<!-- If noLayout: show page only -->
+<div *ngIf="noLayout; else normalLayout">
   <router-outlet></router-outlet>
 </div>
 
-<app-footer></app-footer>
+<!-- Default layout -->
+<ng-template #normalLayout>
+  <app-navbar></app-navbar>
+
+  <div class="bg-gray-100 min-h-screen flex flex-col">
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-footer></app-footer>
+</ng-template>

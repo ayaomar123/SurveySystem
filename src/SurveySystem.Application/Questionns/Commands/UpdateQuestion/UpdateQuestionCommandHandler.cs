@@ -63,7 +63,6 @@ namespace SurveySystem.Application.Questionns.Commands.UpdateQuestion
                 (int)question.QuestionType,
                 question.IsRequired,
                 question.Status,
-                question.CreatedAt,
                 question.Choices,
                 question.SliderConfig,
                 question.StarConfig
