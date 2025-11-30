@@ -1,5 +1,6 @@
 ﻿
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Application.Statics.Dtos;
 
@@ -13,7 +14,12 @@ namespace SurveySystem.Application.Statics.Queries
             var surveys = context.Surveys.Count();
             var activeSurveys = context.Surveys.Where(a => a.Status == Domain.Entites.Surveys.Enums.SurveyStatus.Active).Count();
             var questions = context.Questions.Count();
-            return new StaticDto(responses, surveys, activeSurveys, questions);
+
+            var surveysList = await context.Surveys
+                .Select(a => new ResponseDto(a.Id, a.Title))
+                .ToListAsync();
+
+            return new StaticDto(responses, surveys, activeSurveys, questions, surveysList);
         }
     }
 }

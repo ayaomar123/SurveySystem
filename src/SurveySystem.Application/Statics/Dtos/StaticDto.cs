@@ -4,6 +4,12 @@
         int TotalResponses,
         int TotalSurveys,
         int ActiveSurveys,
-        int TotalQuestions
+        int TotalQuestions,
+        List<ResponseDto> Surveys
+        );
+
+    public sealed record ResponseDto(
+        Guid Id,
+        String Title
         );
 }
