@@ -6,7 +6,7 @@
   </div>
 
   <form *ngIf="survey && form" [formGroup]="form" (ngSubmit)="onSubmit()"
-    class="max-w-3xl mx-auto bg-white p-8  shadow space-y-10">
+    class="max-w-3xl mx-auto bg-white p-8 shadow space-y-10">
 
     <div *ngFor="let q of survey.questions; index as i" class="border-b border-gray-200 pb-8">
 
@@ -17,36 +17,6 @@
       <p *ngIf="q.description" class="text-sm text-gray-400 mb-4">
         {{q.description}}
       </p>
-
-      <!-- YES / NO -->
-      <div *ngIf="q.questionType === 3" class="flex gap-6">
-        <label class="flex items-center gap-2">
-          <input type="radio" [formControlName]="q.id" [value]="true" class="w-4 h-4 text-indigo-600">
-          Yes
-        </label>
-
-        <label class="flex items-center gap-2">
-          <input type="radio" [formControlName]="q.id" [value]="false" class="w-4 h-4 text-indigo-600">
-          No
-        </label>
-      </div>
-
-      <!-- RADIO -->
-      <div *ngIf="q.questionType === 1" class="space-y-2">
-        <label *ngFor="let c of q.choices" class="flex items-center gap-2">
-          <input type="radio" [formControlName]="q.id" [value]="c.text" class="w-4 h-4 text-indigo-600">
-          {{c.text}}
-        </label>
-      </div>
-
-      <!-- CHECKBOX -->
-      <div *ngIf="q.questionType === 2" class="space-y-2">
-        <label *ngFor="let c of q.choices" class="flex items-center gap-2">
-          <input type="checkbox" [value]="c.text" class="w-4 h-4 text-indigo-600"
-            (change)="onCheckboxChange(q.id, c.text, $event)">
-          {{c.text}}
-        </label>
-      </div>
 
       <!-- TEXT -->
       <div *ngIf="q.questionType === 0">
@@ -60,7 +30,37 @@
         </div>
       </div>
 
-      <!-- STAR RATING -->
+      <!-- RADIO -->
+      <div *ngIf="q.questionType === 1" class="space-y-2">
+        <label *ngFor="let c of q.choices" class="flex items-center gap-2">
+          <input type="radio" [formControlName]="q.id" [value]="c.id" class="w-4 h-4 text-indigo-600">
+          {{c.text}}
+        </label>
+      </div>
+
+      <!-- CHECKBOX -->
+      <div *ngIf="q.questionType === 2" class="space-y-2">
+        <label *ngFor="let c of q.choices" class="flex items-center gap-2">
+          <input type="checkbox" [value]="c.id" class="w-4 h-4 text-indigo-600"
+            (change)="onCheckboxChange(q.id, c.id, $event)">
+          {{c.text}}
+        </label>
+      </div>
+
+      <!-- YES / NO -->
+      <div *ngIf="q.questionType === 3" class="flex gap-6">
+        <label class="flex items-center gap-2">
+          <input type="radio" [formControlName]="q.id" value="yes" class="w-4 h-4 text-indigo-600">
+          Yes
+        </label>
+
+        <label class="flex items-center gap-2">
+          <input type="radio" [formControlName]="q.id" value="no" class="w-4 h-4 text-indigo-600">
+          No
+        </label>
+      </div>
+
+      <!-- RATING -->
       <div *ngIf="q.questionType === 4" class="flex gap-2 text-3xl text-yellow-400">
         <span *ngFor="let s of [].constructor(q.starConfig?.maxStar || 5); index as i" (click)="setRating(q.id, i + 1)"
           class="cursor-pointer">

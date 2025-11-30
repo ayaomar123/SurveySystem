@@ -103,7 +103,7 @@
       <div class="flex justify-between">
         <div>
           <h3 class="text-lg font-semibold text-gray-800">
-            <a target="_blank" routerLink="{{survey.id}}">{{survey.title}}</a>
+            <a routerLink="{{survey.id}}">{{survey.title}}</a>
             <span class="inline-block mt-3 px-3 py-1 text-xs rounded-full"
               [ngClass]="survey.status ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-400'">
               {{survey.status | surveyStatus}}

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
-import { Survey, SurveyCreate } from '../interfaces/survey';
+import { Survey, SurveyCreate, SurveySubmit } from '../interfaces/survey';
 import { Question } from '../../questions/interfaces/question';
 
 @Injectable({
@@ -25,15 +25,18 @@ export class SurveyService {
   }
 
   getSurveyById(id: string) {
-    console.log(id)
     return this.http.get<Survey>(`${this.apiUrl}/${id}`);
   }
+
   createSurvey(data: SurveyCreate) {
     return this.http.post(this.apiUrl, data);
   }
 
   updateSurvey(id: number, data: SurveyCreate) {
-    console.log("Updating question with ID:", data.id);
     return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+
+  submitSurvey(id: string, data: SurveySubmit) {
+    return this.http.post(`${this.apiUrl}/${id}/submit`, data);
   }
 }

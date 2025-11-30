@@ -30,3 +30,15 @@ export interface SurveyQuestionOrder {
   questionId: string;
   order: number;
 }
+
+
+export interface SurveySubmit {
+  answers: SurveyAnswers[];
+}
+
+export interface SurveyAnswers {
+  questionId: string;
+  value?: string | null;
+  selectedChoiceId?: string | null;
+  selectedChoices?: string[] | null;
+}
