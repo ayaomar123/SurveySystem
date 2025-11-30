@@ -1,4 +1,5 @@
 ﻿using SurveySystem.Domain.Entites.Surveys.Enums;
+using SurveySystem.Domain.Entites.Surveys.Responses;
 
 namespace SurveySystem.Domain.Entites.Surveys
 {
@@ -18,6 +19,7 @@ namespace SurveySystem.Domain.Entites.Surveys
         public Guid? LastModifiedBy { get; private set; }
         public User? LastModifiedByUser { get; private set; }
         public ICollection<SurveyQuestion> SurveyQuestions { get; private set; } = new List<SurveyQuestion>();
+        public ICollection<SurveyResponse> SurveyResponses { get; private set; } = new List<SurveyResponse>();
 
         private Survey() { }
 

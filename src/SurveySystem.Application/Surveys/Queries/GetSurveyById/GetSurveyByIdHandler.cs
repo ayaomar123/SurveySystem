@@ -44,7 +44,7 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveyById
                     q.Question.Description,
                     (int)q.Question.QuestionType,
                     q.Question.IsRequired,
-                    q.Question.Choices?.Select(c => new QuestionChoiceDto(
+                    q.Question.Choices?.OrderBy(c => c.Order).Select(c => new QuestionChoiceDto(
                         c.Id,
                         c.Text,
                         c.Order

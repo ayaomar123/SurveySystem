@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Application.Surveys.Dtos;
+using System.Linq;
 
 namespace SurveySystem.Application.Surveys.Queries.GetSurveys
 {
@@ -18,7 +19,7 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveys
                     survey.CreatedAt,
                     survey.LastModifiedDate,
                     survey.SurveyQuestions.Count,
-                    0,
+                    survey.SurveyResponses.Count,
                     survey.StartDate,
                     survey.EndDate,
                     survey.SurveyQuestions

@@ -12,8 +12,8 @@ using SurveySystem.Infrastructure;
 namespace SurveySystem.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251127120525_fix")]
-    partial class fix
+    [Migration("20251130100201_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,6 +134,62 @@ namespace SurveySystem.Infrastructure.Data.Migrations
                     b.ToTable("StarConfigs");
                 });
 
+            modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Responses.SurveyAnswer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SelectedChoiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SelectedChoicesIds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SurveyResponseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("SurveyResponseId");
+
+                    b.ToTable("SurveyAnswers");
+                });
+
+            modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Responses.SurveyResponse", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurveyResponses");
+                });
+
             modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Survey", b =>
                 {
                     b.Property<Guid>("Id")
@@ -182,24 +238,18 @@ namespace SurveySystem.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.SurveyQuestion", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuestionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SurveyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
+                    b.HasKey("SurveyId", "QuestionId");
 
                     b.HasIndex("QuestionId");
-
-                    b.HasIndex("SurveyId");
 
                     b.ToTable("SurveyQuestions");
                 });
@@ -259,6 +309,25 @@ namespace SurveySystem.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Responses.SurveyAnswer", b =>
+                {
+                    b.HasOne("SurveySystem.Domain.Entites.Questions.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SurveySystem.Domain.Entites.Surveys.Responses.SurveyResponse", "SurveyResponse")
+                        .WithMany("Answers")
+                        .HasForeignKey("SurveyResponseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+
+                    b.Navigation("SurveyResponse");
+                });
+
             modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Survey", b =>
                 {
                     b.HasOne("SurveySystem.Domain.Entites.User", "CreatedByUser")
@@ -305,6 +374,11 @@ namespace SurveySystem.Infrastructure.Data.Migrations
                     b.Navigation("StarConfig");
 
                     b.Navigation("SurveyQuestions");
+                });
+
+            modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Responses.SurveyResponse", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("SurveySystem.Domain.Entites.Surveys.Survey", b =>

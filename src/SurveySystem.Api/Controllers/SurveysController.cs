@@ -7,6 +7,9 @@ using SurveySystem.Application.Surveys.Commands.UpdateSurvey;
 using SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus;
 using SurveySystem.Application.Surveys.Queries.GetSurveyById;
 using SurveySystem.Application.Surveys.Queries.GetSurveys;
+using SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyResponse;
+using SurveySystem.Application.Surveys.Responses.Dtos;
+using SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse;
 
 namespace SurveySystem.Api.Controllers
 {
@@ -62,7 +65,7 @@ namespace SurveySystem.Api.Controllers
                     new SurveyQuestionItem(q.QuestionId, q.Order)).ToList()
             );
             var updatedSurvey = await mediator.Send(command);
-            return Ok(updatedSurvey);
+            return NoContent();
         }
 
         [HttpPatch("{id}/status")]
@@ -75,7 +78,45 @@ namespace SurveySystem.Api.Controllers
                 request.EndDate
             );
             var updatedSurvey = await mediator.Send(command);
-            return Ok(updatedSurvey);
+            return NoContent();
+        }
+
+        [HttpPost("{surveyId}/submit")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SubmitSurveyResponse(
+            Guid surveyId,
+            SubmitSurveyResponseRequest request)
+        {
+            var ip = Request.Headers["X-Forwarded-For"].FirstOrDefault()
+             ?? HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            var userAgent = Request.Headers["User-Agent"].ToString();
+
+            var command = new SubmitSurveyResponseCommand
+            {
+
+                SurveyId = surveyId,
+                IpAddress = ip,
+                UserAgent = userAgent,
+                Answers = request.Answers.Select(a => new SubmitAnswerDto
+                {
+                    QuestionId = a.QuestionId,
+                    Value = a.Value,
+                    SelectedChoiceId = a.SelectedChoiceId,
+                    SelectedChoicesIds = a.SelectedChoices
+                }).ToList()
+            };
+
+            var responseId = await mediator.Send(command);
+
+            return Ok(new { responseId });
+        }
+
+        [HttpGet("{surveyId}/analytics")]
+        public async Task<IActionResult> GetAnalytics(Guid surveyId)
+        {
+            var result = await mediator.Send(new GetSurveyAnalyticsQuery(surveyId));
+            return Ok(result);
         }
     }
 }

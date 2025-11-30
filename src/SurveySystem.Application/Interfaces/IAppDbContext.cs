@@ -2,6 +2,7 @@
 using SurveySystem.Domain.Entites;
 using SurveySystem.Domain.Entites.Questions;
 using SurveySystem.Domain.Entites.Surveys;
+using SurveySystem.Domain.Entites.Surveys.Responses;
 
 namespace SurveySystem.Application.Interfaces
 {
@@ -14,7 +15,8 @@ namespace SurveySystem.Application.Interfaces
         public DbSet<StarConfig> StarConfigs { get; }
         public DbSet<Survey> Surveys { get; }
         public DbSet<SurveyQuestion> SurveyQuestions { get; }
-
+        DbSet<SurveyResponse> SurveyResponses { get; }
+        DbSet<SurveyAnswer> SurveyAnswers { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
