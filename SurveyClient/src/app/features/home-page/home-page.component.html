@@ -1,62 +1,37 @@
 <div class="p-6 pt-20 pb-20 max-w-6xl mx-auto">
 
-  <!-- ===== MAIN CONTENT ===== -->
   <main class="flex-1 p-6">
 
-    <!-- HEADER -->
-    <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+      <p class="text-gray-400 text-sm border border-gray-200 rounded-full p-2">
+        {{ (today | date:"MMM d, y, h:mm a '('zzz')'") }}</p>
+    </div>
     <p class="text-gray-600 mt-1">Welcome back! Here is an overview of your surveys.</p>
 
-    <!-- STATS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
+        <h3 class="text-gray-500 text-sm">Total Responses</h3>
+        <p class="text-3xl font-semibold text-indigo-600 mt-2">{{statics?.totalResponses}}</p>
+      </div>
       <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
         <h3 class="text-gray-500 text-sm">Total Surveys</h3>
-        <p class="text-3xl font-semibold text-indigo-600 mt-2">14</p>
-      </div>
-
-      <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
-        <h3 class="text-gray-500 text-sm">Responses</h3>
-        <p class="text-3xl font-semibold text-indigo-600 mt-2">1,248</p>
+        <p class="text-3xl font-semibold text-indigo-600 mt-2">{{statics?.totalSurveys}}</p>
       </div>
 
       <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
         <h3 class="text-gray-500 text-sm">Active Surveys</h3>
-        <p class="text-3xl font-semibold text-indigo-600 mt-2">5</p>
+        <p class="text-3xl font-semibold text-indigo-600 mt-2">{{statics?.activeSurveys}}</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
+        <h3 class="text-gray-500 text-sm">Total Questions</h3>
+        <p class="text-3xl font-semibold text-indigo-600 mt-2">{{statics?.totalQuestions}}</p>
       </div>
 
     </div>
 
-    <!-- SURVEYS LIST -->
-    <h2 class="text-xl font-semibold mt-10 mb-4">Recent Surveys</h2>
 
-    <div class="space-y-4">
-
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition flex justify-between">
-        <div>
-          <h3 class="text-lg font-semibold text-gray-800">Customer Satisfaction Survey</h3>
-          <p class="text-gray-600 text-sm mt-1">54 responses • Updated 2 days ago</p>
-        </div>
-        <a href="#" class="text-indigo-600 hover:underline">View</a>
-      </div>
-
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition flex justify-between">
-        <div>
-          <h3 class="text-lg font-semibold text-gray-800">Employee Feedback Survey</h3>
-          <p class="text-gray-600 text-sm mt-1">89 responses • Updated 5 days ago</p>
-        </div>
-        <a href="#" class="text-indigo-600 hover:underline">View</a>
-      </div>
-
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition flex justify-between">
-        <div>
-          <h3 class="text-lg font-semibold text-gray-800">Course Evaluation</h3>
-          <p class="text-gray-600 text-sm mt-1">120 responses • Updated 1 week ago</p>
-        </div>
-        <a href="#" class="text-indigo-600 hover:underline">View</a>
-      </div>
-
-    </div>
 
   </main>
 

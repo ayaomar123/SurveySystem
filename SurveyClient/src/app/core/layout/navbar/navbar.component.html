@@ -1,7 +1,9 @@
 <nav class="bg-white shadow fixed top-0 left-0 w-full z-50">
   <div class="max-w-full mx-auto px-6 py-4 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-      <span class="text-2xl font-bold text-indigo-600">Survey<span class="text-gray-800">System</span></span>
+      <a routerLink="/home">
+        <span class="text-2xl font-bold text-indigo-600">Survey<span class="text-gray-800">System</span></span>
+      </a>
     </div>
 
     <div *ngIf="auth.isLoggedIn()" class="hidden md:flex items-center space-x-6 text-gray-700">
@@ -36,7 +38,7 @@
       <li><a routerLink="/questions" class="block hover:text-indigo-600">Questions</a></li>
       <li><a routerLink="/surveys" class="block hover:text-indigo-600">Surveys</a></li>
       <li><a routerLink="/users" class="block hover:text-indigo-600">Users</a></li>
-      <li ><button (click)="onLogout()"
+      <li><button (click)="onLogout()"
           class="px-4 py-1 block bg-indigo-200 rounded-full hover:bg-indigo-600 transition hover:cursor-pointer hover:text-white">Logout</button>
       </li>
     </ul>

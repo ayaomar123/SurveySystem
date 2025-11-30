@@ -12,10 +12,6 @@ export class SurveyService {
   private apiQuestionsUrl = `${environment.apiUrl}/questions`;
   constructor(private http: HttpClient) { }
 
-  ngOnInit(): void {
-    this.loadSurveys();
-  }
-
   loadSurveys() {
     return this.http.get<Survey[]>(this.apiUrl);
   }

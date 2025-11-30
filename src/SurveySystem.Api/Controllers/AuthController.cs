@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SurveySystem.Api.Requests;
+using SurveySystem.Application.Statics.Queries;
 using SurveySystem.Application.Users.Commands.Login;
 
 namespace SurveySystem.Api.Controllers
@@ -13,6 +15,14 @@ namespace SurveySystem.Api.Controllers
         public async Task<IActionResult> Login(AuthRequest request)
         {
             var result = await mediator.Send(new LoginCommand(request.Email, request.Password));
+            return Ok(result);
+        }
+
+        [HttpGet("statics")]
+        [AllowAnonymous]
+        public async Task<IActionResult> getStatics()
+        {
+            var result = await mediator.Send(new GetStaticQuery());
             return Ok(result);
         }
     }
