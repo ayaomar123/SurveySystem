@@ -3,10 +3,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { HomeService } from './services/home.service';
 import { Statics, SurveyAnalytics } from './interfaces/home';
 import { QuestionTypeNamePipe } from "../questions/pipes/question-type-name.pipe";
+import { ɵInternalFormsSharedModule } from "@angular/forms";
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule, QuestionTypeNamePipe],
+  imports: [CommonModule, QuestionTypeNamePipe, ɵInternalFormsSharedModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
@@ -41,4 +42,15 @@ export class HomePageComponent implements OnInit {
       }
     });
   }
+  getStarColor(star: string): string {
+    switch (star) {
+      case "1": return 'bg-gradient-to-r from-red-500 to-red-700';
+      case '2': return 'bg-gradient-to-r from-orange-400 to-orange-600';
+      case "3": return 'bg-gradient-to-r from-yellow-400 to-yellow-500';
+      case "4": return 'bg-gradient-to-r from-green-400 to-green-600';
+      case "5": return 'bg-gradient-to-r from-blue-500 to-blue-700';
+      default: return 'bg-gradient-to-r from-gray-400 to-gray-600';
+    }
+  }
+
 }

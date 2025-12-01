@@ -6,7 +6,8 @@ using SurveySystem.Domain.Entites.Questions.Enums;
 
 namespace SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse
 {
-    public class GetSurveyAnalyticsQueryHandler(IAppDbContext context) : IRequestHandler<GetSurveyAnalyticsQuery, SurveyAnalyticsDto>
+    public class GetSurveyAnalyticsQueryHandler(IAppDbContext context)
+        : IRequestHandler<GetSurveyAnalyticsQuery, SurveyAnalyticsDto>
     {
         public async Task<SurveyAnalyticsDto> Handle(GetSurveyAnalyticsQuery request, CancellationToken ct)
         {
@@ -14,9 +15,13 @@ namespace SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse
                 .Include(s => s.SurveyQuestions)
                     .ThenInclude(sq => sq.Question)
                         .ThenInclude(q => q.Choices)
+                .Include(s => s.SurveyQuestions)
+                    .ThenInclude(sq => sq.Question.SliderConfig)
+                .Include(s => s.SurveyQuestions)
+                    .ThenInclude(sq => sq.Question.StarConfig)
                 .FirstOrDefaultAsync(s => s.Id == request.SurveyId, ct);
 
-            if (survey == null)
+            if (survey is null)
                 throw new Exception("Survey not found.");
 
             var responses = await context.SurveyResponses
@@ -32,27 +37,28 @@ namespace SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse
 
             foreach (var sq in survey.SurveyQuestions)
             {
+                var q = sq.Question;
 
                 var qDto = new QuestionAnalyticsDto
                 {
-                    QuestionId = sq.QuestionId,
-                    Title = sq.Question.Title,
-                    QuestionType = sq.Question.QuestionType
+                    QuestionId = q.Id,
+                    Title = q.Title,
+                    QuestionType = q.QuestionType
                 };
 
                 var qAnswers = responses
                     .SelectMany(r => r.Answers)
-                    .Where(a => a.QuestionId == sq.QuestionId)
+                    .Where(a => a.QuestionId == q.Id)
                     .ToList();
 
                 qDto.TotalResponses = qAnswers.Count;
 
-                switch (sq.Question.QuestionType)
+                switch (q.QuestionType)
                 {
                     case QuestionType.TextInput:
                         qDto.TextValues = qAnswers
                             .Select(a => a.Value)
-                            .Select(v => v!)
+                            .Where(v => !string.IsNullOrWhiteSpace(v))
                             .ToList();
                         break;
 
@@ -62,46 +68,75 @@ namespace SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse
                         break;
 
                     case QuestionType.Radio:
-                        qDto.SingleChoiceValues = qAnswers
-                            .GroupBy(a => a.SelectedChoiceId)
-                            .ToDictionary(
-                                g => sq.Question.Choices.First(c => c.Id == g.Key).Text,
-                                g => g.Count()
-                            );
+                        qDto.SingleChoiceValues = q.Choices
+                            .ToDictionary(c => c.Text, c => 0);
+
+                        foreach (var answer in qAnswers.Where(a => a.SelectedChoiceId != null))
+                        {
+                            var choice = q.Choices.FirstOrDefault(c => c.Id == answer.SelectedChoiceId);
+                            if (choice != null)
+                                qDto.SingleChoiceValues[choice.Text]++;
+                        }
                         break;
 
                     case QuestionType.Checkbox:
-                        qDto.MultipleChoiceValues = qAnswers
-                            .SelectMany(a => a.SelectedChoicesIds ?? new List<Guid>())
-                            .GroupBy(id => id)
-                            .ToDictionary(
-                                g => sq.Question.Choices.First(c => c.Id == g.Key).Text,
-                                g => g.Count()
-                            );
+                        qDto.MultipleChoiceValues = q.Choices
+                            .ToDictionary(c => c.Text, c => 0);
+
+                        foreach (var answer in qAnswers)
+                        {
+                            foreach (var selectedId in answer.SelectedChoicesIds ?? new List<Guid>())
+                            {
+                                var choice = q.Choices.FirstOrDefault(c => c.Id == selectedId);
+                                if (choice != null)
+                                    qDto.MultipleChoiceValues[choice.Text]++;
+                            }
+                        }
                         break;
 
                     case QuestionType.Rating:
-                        var ratings = qAnswers
-                            .Select(a => int.Parse(a.Value!))
+                        int maxStar = q.StarConfig?.MaxStar ?? 5;
+
+                        var numericRatings = qAnswers
+                            .Select(a =>
+                            {
+                                int.TryParse(a.Value, out var r);
+                                return r;
+                            })
+                            .Where(r => r > 0)
                             .ToList();
 
-                        qDto.AverageRating = ratings.Any() ? ratings.Average() : 0;
+                        qDto.AverageRating = numericRatings.Any()
+                            ? numericRatings.Average()
+                            : 0;
 
-                        qDto.RatingValues = ratings
-                            .GroupBy(r => r)
-                            .ToDictionary(g => g.Key, g => g.Count());
+                        qDto.RatingValues = Enumerable
+                            .Range(1, maxStar)
+                            .ToDictionary(
+                                star => star,
+                                star => numericRatings.Count(r => r == star)
+                            );
+
                         break;
 
                     case QuestionType.Slider:
-                        var values = qAnswers
-                            .Select(a => int.Parse(a.Value!))
+                        var sliderValues = qAnswers
+                            .Select(a =>
+                            {
+                                int.TryParse(a.Value, out var v);
+                                return v;
+                            })
+                            .Where(v => v >= 0)
                             .ToList();
 
-                        qDto.AverageSlider = values.Any() ? values.Average() : 0;
+                        qDto.AverageSlider = sliderValues.Any()
+                            ? sliderValues.Average()
+                            : 0;
 
-                        qDto.SliderValues = values
-                            .GroupBy(r => r)
+                        qDto.SliderValues = sliderValues
+                            .GroupBy(v => v)
                             .ToDictionary(g => g.Key, g => g.Count());
+
                         break;
                 }
 

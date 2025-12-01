@@ -113,6 +113,7 @@ namespace SurveySystem.Api.Controllers
         }
 
         [HttpGet("{surveyId}/analytics")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAnalytics(Guid surveyId)
         {
             var result = await mediator.Send(new GetSurveyAnalyticsQuery(surveyId));

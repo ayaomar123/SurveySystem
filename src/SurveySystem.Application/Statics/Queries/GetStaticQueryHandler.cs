@@ -12,7 +12,8 @@ namespace SurveySystem.Application.Statics.Queries
         {
             var responses = context.SurveyResponses.Count();
             var surveys = context.Surveys.Count();
-            var activeSurveys = context.Surveys.Where(a => a.Status == Domain.Entites.Surveys.Enums.SurveyStatus.Active).Count();
+            var activeSurveys = context.Surveys
+                .Where(a => a.Status == Domain.Entites.Surveys.Enums.SurveyStatus.Active).Count();
             var questions = context.Questions.Count();
 
             var surveysList = await context.Surveys
