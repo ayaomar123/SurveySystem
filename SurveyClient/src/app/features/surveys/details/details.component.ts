@@ -12,7 +12,7 @@ import { SurveySubmit } from '../interfaces/survey';
   styleUrl: './details.component.css'
 })
 export class DetailsComponent implements OnInit {
-
+  isActive: boolean = true;
   survey: any = null;
   form!: FormGroup;
   id!: string;
@@ -33,6 +33,11 @@ export class DetailsComponent implements OnInit {
       next: (res) => {
         this.survey = res;
         this.buildForm();
+      },
+      error: err => {
+        if (err.status === 404) {
+          this.isActive = false;
+        }
       }
     });
   }

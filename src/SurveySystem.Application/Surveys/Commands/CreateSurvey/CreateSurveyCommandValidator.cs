@@ -8,29 +8,30 @@ namespace SurveySystem.Application.Surveys.Commands.CreateSurvey
     {
         public CreateSurveyCommandValidator()
         {
-            RuleFor(x => x.Title)
-                .NotEmpty().WithMessage("Title is required.")
-                .MaximumLength(200).WithMessage("Title cannot exced 200");
+            RuleFor(x =>  x.Request.Title)
+                .NotEmpty().WithMessage("Title is required")
+                .MinimumLength(3).WithMessage("Title min 3")
+                .MaximumLength(200).WithMessage("Title max 200");
 
-            RuleFor(x => x.Status)
-                .IsInEnum().WithMessage("Invalid survey status.");
+            RuleFor(x =>  x.Request.Status)
+                .IsInEnum().WithMessage("Invalid survey status");
 
-            RuleFor(x => x.StartDate)
-                .LessThan(x => x.EndDate)
-                .When(x => x.StartDate.HasValue && x.EndDate.HasValue)
-                .WithMessage("StartDate must be before EndDate.");
+            RuleFor(x =>  x.Request.StartDate)
+                .LessThan(x =>  x.Request.EndDate)
+                .When(x =>  x.Request.StartDate.HasValue &&  x.Request.EndDate.HasValue)
+                .WithMessage("StartDate > EndDate");
 
-            RuleFor(x => x.Questions)
-                .NotNull().WithMessage("At least one question must be selected.")
-                .NotEmpty().WithMessage("At least one question must be selected.");
+            RuleFor(x =>  x.Request.Questions)
+                .NotNull().WithMessage("Questions required")
+                .NotEmpty().WithMessage("Questions required");
 
-            RuleForEach(x => x.Questions).ChildRules(questions =>
+            RuleForEach(x =>  x.Request.Questions).ChildRules(questions =>
             {
                 questions.RuleFor(q => q.QuestionId)
-                    .NotEmpty().WithMessage("QuestionId cannot be empty.");
+                    .NotEmpty().WithMessage("QuestionId required");
 
                 questions.RuleFor(q => q.Order)
-                    .GreaterThan(0).WithMessage("Order must be greater than zero.");
+                    .GreaterThan(0).WithMessage("Order must > 0");
             });
         }
     }

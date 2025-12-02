@@ -10,22 +10,21 @@ namespace SurveySystem.Application.Surveys.Commands.CreateSurvey
         public async Task<Guid> Handle(CreateSurveyCommand request, CancellationToken ct)
         {
             var survey = Survey.Create(
-                request.Title,
-                request.Description,
-                request.Status,
-                request.StartDate,
-                request.EndDate,
+                 request.Request.Title,
+                 request.Request.Description,
+                 request.Request.Status,
+                 request.Request.StartDate,
+                 request.Request.EndDate,
                 user.UserId!.Value
             );
 
-            foreach (var q in request.Questions)
+            foreach (var q in  request.Request.Questions)
             {
                 survey.AddQuestion(q.QuestionId, q.Order);
             }
 
             await context.Surveys.AddAsync(survey, ct);
             await context.SaveChangesAsync(ct);
-
             return survey.Id;
         }
     }

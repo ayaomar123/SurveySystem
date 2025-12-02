@@ -14,6 +14,7 @@ import { ɵInternalFormsSharedModule } from "@angular/forms";
 export class HomePageComponent implements OnInit {
 
   today = new Date();
+  hasAccess: boolean = true;
   statics: Statics | undefined;
   analytics: SurveyAnalytics | undefined;
   showAnalyticsDiv: boolean = false;
@@ -25,13 +26,17 @@ export class HomePageComponent implements OnInit {
 
   getStats() {
     this.service.loadStatics().subscribe({
-      complete: () => console.log(this.statics),
-      next: res => this.statics = res
+      next: res => this.statics = res,
+      error: err => {
+        if (err.status === 403) {
+          this.hasAccess = false;
+        }
+      }
     });
   }
 
+
   getSurveyStatics(event: any) {
-    console.log(event.target.value);
     var id = event.target.value
 
     this.service.getAnalytics(id).subscribe({

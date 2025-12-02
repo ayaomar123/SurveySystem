@@ -1,6 +1,7 @@
 ﻿using MediatR;
-using SurveySystem.Application.Questionns.Dtos;
+using SurveySystem.Application.Questionns.Commands.CreateQuestion.Dtos;
+
 namespace SurveySystem.Application.Questionns.Commands.CreateQuestion
 {
-    public sealed record CreateQuestionCommand(CreateQuestionRequest Request) : IRequest<Guid>;
+    public sealed record CreateQuestionCommand(CreateQuestionDto Request) : IRequest<Guid>;
 }

@@ -48,6 +48,10 @@ namespace SurveySystem.Domain.Entites.Surveys
             DateTime? endDate,
             Guid createdBy)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
             return new Survey(title, description, status, startDate, endDate, createdBy);
         }
 
@@ -58,6 +62,10 @@ namespace SurveySystem.Domain.Entites.Surveys
             DateTime? endDate,
             Guid modifiedBy)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
             Title = title;
             Description = description;
             StartDate = startDate;

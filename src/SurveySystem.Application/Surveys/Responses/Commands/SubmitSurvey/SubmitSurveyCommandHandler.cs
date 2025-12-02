@@ -3,24 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Domain.Entites.Surveys.Responses;
 
-namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyResponse
+namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurvey
 {
-    public class SubmitSurveyResponseCommandHandler
-        : IRequestHandler<SubmitSurveyResponseCommand, Guid>
+    public class SubmitSurveyCommandHandler(IAppDbContext context)
+        : IRequestHandler<SubmitSurveyCommand, Guid>
     {
-        private readonly IAppDbContext _context;
-
-        public SubmitSurveyResponseCommandHandler(IAppDbContext context)
+        public async Task<Guid> Handle(SubmitSurveyCommand request, CancellationToken ct)
         {
-            _context = context;
-        }
-
-        public async Task<Guid> Handle(SubmitSurveyResponseCommand request, CancellationToken ct)
-        {
-            var survey = await _context.Surveys
+            var survey = await context.Surveys
                 .Include(s => s.SurveyQuestions)
                 .ThenInclude(sq => sq.Question)
-                .FirstOrDefaultAsync(s => s.Id == request.SurveyId, ct);
+                .FirstOrDefaultAsync(s => s.Id == request.Request.SurveyId, ct);
 
             if (survey is null)
                 throw new Exception("Survey not found");
@@ -29,19 +22,13 @@ namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyRespon
                 .Select(sq => sq.QuestionId)
                 .ToHashSet();
 
-            foreach (var ans in request.Answers)
-            {
-                if (!surveyQuestionIds.Contains(ans.QuestionId))
-                    throw new Exception($"Question '{ans.QuestionId}' does not belong to this survey.");
-            }
-
             var response = new SurveyResponse(
-                surveyId: request.SurveyId,
-                ipAddress: request.IpAddress,
-                userAgent: request.UserAgent
+                surveyId: request.Request.SurveyId,
+                ipAddress: request.Request.IpAddress,
+                userAgent: request.Request.UserAgent
             );
 
-            foreach (var ans in request.Answers)
+            foreach (var ans in request.Request.Answers)
             {
                 SurveyAnswer answer;
 
@@ -74,8 +61,8 @@ namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyRespon
                 response.AddAnswer(answer);
             }
 
-            _context.SurveyResponses.Add(response);
-            await _context.SaveChangesAsync(ct);
+            context.SurveyResponses.Add(response);
+            await context.SaveChangesAsync(ct);
 
             return response.Id;
         }

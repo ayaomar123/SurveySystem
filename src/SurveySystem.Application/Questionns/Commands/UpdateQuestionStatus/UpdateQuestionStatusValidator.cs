@@ -7,7 +7,7 @@ namespace SurveySystem.Application.Questionns.Commands.UpdateQuestionStatus
         public UpdateQuestionStatusValidator()
         {
             RuleFor(x => x.Id)
-                .NotEmpty().WithMessage("ID is required.");
+                .NotEmpty().WithMessage("Id is required.");
         }
     }
 }

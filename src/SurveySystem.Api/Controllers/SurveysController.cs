@@ -2,29 +2,33 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SurveySystem.Api.Requests.Surveys;
+using SurveySystem.Api.Requests.Surveys.Responses;
 using SurveySystem.Application.Surveys.Commands.CreateSurvey;
+using SurveySystem.Application.Surveys.Commands.CreateSurvey.Dtos;
 using SurveySystem.Application.Surveys.Commands.UpdateSurvey;
+using SurveySystem.Application.Surveys.Commands.UpdateSurvey.Dtos;
 using SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus;
+using SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus.Dtos;
 using SurveySystem.Application.Surveys.Queries.GetSurveyById;
 using SurveySystem.Application.Surveys.Queries.GetSurveys;
-using SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyResponse;
-using SurveySystem.Application.Surveys.Responses.Dtos;
+using SurveySystem.Application.Surveys.Queries.GetSurveys.Dtos;
+using SurveySystem.Application.Surveys.Responses.Commands.SubmitSurvey;
+using SurveySystem.Application.Surveys.Responses.Commands.SubmitSurvey.Dtos;
 using SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse;
-using SurveySystem.Domain.Entites.Surveys.Enums;
 
 namespace SurveySystem.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+
     public class SurveysController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get
-            ([FromQuery] string? title, [FromQuery] SurveyStatus? status,
-            [FromQuery] bool? hasResponses = null)
+        public async Task<IActionResult> Get([FromQuery]GetSurveyQueryRequest request)
         {
-            var questions = await mediator.Send(new GetSurveyQuery());
+            var dto = new GetSurveyQueryDto(request.title,request.status);
+            var questions = await mediator.Send(new GetSurveyQuery(dto));
             return Ok(questions);
         }
 
@@ -37,17 +41,19 @@ namespace SurveySystem.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSurvey([FromBody] CreateSurveyRequest request)
+        public async Task<IActionResult> CreateSurvey
+            ([FromBody] CreateSurveyRequest request)
         {
-            var command = new CreateSurveyCommand(
+            var dto = new CreateSurveyDto(
                 request.Title,
                 request.Description,
                 request.Status,
                 request.StartDate,
                 request.EndDate,
                 request.Questions.Select(q =>
-                    new SurveyQuestionItem(q.QuestionId, q.Order)).ToList()
-            );
+                    new SurveyQuestionItem(q.QuestionId, q.Order)).ToList());
+            
+            var command = new CreateSurveyCommand(dto);
 
             var surveyId = await mediator.Send(command);
 
@@ -57,16 +63,17 @@ namespace SurveySystem.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSurvey(Guid id, [FromBody] UpdateSurveyRequest request)
         {
-            var command = new UpdateSurveyCommand(
-                id,
+            var dto = new UpdateSurveyDto(id,
                 request.Title,
                 request.Description,
                 request.Status,
                 request.StartDate,
                 request.EndDate,
                 request.Questions.Select(q =>
-                    new SurveyQuestionItem(q.QuestionId, q.Order)).ToList()
-            );
+                    new SurveyQuestionItem(q.QuestionId, q.Order)).ToList());
+
+            var command = new UpdateSurveyCommand(dto);
+
             var updatedSurvey = await mediator.Send(command);
             return NoContent();
         }
@@ -74,12 +81,14 @@ namespace SurveySystem.Api.Controllers
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateSurveyStatus(Guid id, [FromBody] UpdateSurveyStatusRequest request)
         {
-            var command = new UpdateSurveyStatusCommand(
+            var dto = new UpdateSurveyStatusDto(
                 id,
                 request.Status,
                 request.StartDate,
-                request.EndDate
-            );
+                request.EndDate);
+
+            var command = new UpdateSurveyStatusCommand(dto);
+
             var updatedSurvey = await mediator.Send(command);
             return NoContent();
         }
@@ -88,27 +97,25 @@ namespace SurveySystem.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SubmitSurveyResponse(
             Guid surveyId,
-            SubmitSurveyResponseRequest request)
+            SubmitSurveyRequest request)
         {
-            var ip = Request.Headers["X-Forwarded-For"].FirstOrDefault()
-             ?? HttpContext.Connection.RemoteIpAddress?.ToString();
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             var userAgent = Request.Headers["User-Agent"].ToString();
 
-            var command = new SubmitSurveyResponseCommand
-            {
-
-                SurveyId = surveyId,
-                IpAddress = ip,
-                UserAgent = userAgent,
-                Answers = request.Answers.Select(a => new SubmitAnswerDto
+            var dto = new SubmitSurveyCommandDto(
+                surveyId,
+                ip,
+                userAgent,
+                request.Answers.Select(a => new SubmitSurveyAnswerDto
                 {
                     QuestionId = a.QuestionId,
                     Value = a.Value,
                     SelectedChoiceId = a.SelectedChoiceId,
                     SelectedChoicesIds = a.SelectedChoices
-                }).ToList()
-            };
+                }).ToList());
+
+            var command = new SubmitSurveyCommand(dto);
 
             var responseId = await mediator.Send(command);
 
@@ -116,7 +123,6 @@ namespace SurveySystem.Api.Controllers
         }
 
         [HttpGet("{surveyId}/analytics")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAnalytics(Guid surveyId)
         {
             var result = await mediator.Send(new GetSurveyAnalyticsQuery(surveyId));

@@ -1,6 +1,6 @@
-﻿namespace SurveySystem.Application.Surveys.Responses.Dtos
+﻿namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurvey.Dtos
 {
-    public class SubmitAnswerDto
+    public class SubmitSurveyAnswerDto
     {
         public Guid QuestionId { get; set; }
 

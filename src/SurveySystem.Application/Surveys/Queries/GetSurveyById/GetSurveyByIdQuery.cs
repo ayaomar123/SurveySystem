@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SurveySystem.Application.Surveys.Dtos.Details;
+using SurveySystem.Application.Surveys.Queries.GetSurveyById.Dtos;
 
 namespace SurveySystem.Application.Surveys.Queries.GetSurveyById
 {

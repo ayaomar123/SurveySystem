@@ -7,33 +7,33 @@ namespace SurveySystem.Application.Questionns.Commands.UpdateQuestion
     {
         public UpdateQuestionCommandValidator()
         {
-            RuleFor(x => x.Id)
-                  .NotEmpty().WithMessage("Question ID is required.");
+            RuleFor(x =>  x.Request.Id)
+                  .NotEmpty().WithMessage("Id is required");
 
-            RuleFor(x => x.Title)
-                .NotEmpty().WithMessage("Title is required.");
+            RuleFor(x =>  x.Request.Title)
+                .NotEmpty().WithMessage("Title is required");
 
-            RuleFor(x => x.QuestionType)
-                .IsInEnum().WithMessage("Invalid question type.");
+            RuleFor(x =>  x.Request.QuestionType)
+                .IsInEnum().WithMessage("Invalid question type");
 
-            When(x => x.QuestionType == QuestionTypeDto.Radio ||
-                     x.QuestionType == QuestionTypeDto.Checkbox, () =>
+            When(x => 
+            x.Request.QuestionType == QuestionTypeDto.Radio ||
+            x.Request.QuestionType == QuestionTypeDto.Checkbox, () =>
                      {
-                         RuleFor(x => x.Choices)
-                             .NotNull().WithMessage("Choices are required.")
-                             .Must(c => c!.Count > 0).WithMessage("Choices cannot be empty.");
+                         RuleFor(x =>  x.Request.Choices)
+                             .Must(c => c!.Count > 0).WithMessage("Choices required");
                      });
 
-            When(x => x.QuestionType == QuestionTypeDto.Slider, () =>
+            When(x =>  x.Request.QuestionType == QuestionTypeDto.Slider, () =>
             {
-                RuleFor(x => x.SliderConfig)
-                    .NotNull().WithMessage("SliderConfig is required.");
+                RuleFor(x =>  x.Request.SliderConfig)
+                    .NotNull().WithMessage("SliderConfig required");
             });
 
-            When(x => x.QuestionType == QuestionTypeDto.Rating, () =>
+            When(x =>  x.Request.QuestionType == QuestionTypeDto.Rating, () =>
             {
-                RuleFor(x => x.StarConfig)
-                    .NotNull().WithMessage("StarConfig is required.");
+                RuleFor(x =>  x.Request.StarConfig)
+                    .NotNull().WithMessage("StarConfig required");
             });
         }
     }

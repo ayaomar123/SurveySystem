@@ -14,30 +14,30 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
 
             var survey = await context.Surveys
                 .Include(s => s.SurveyQuestions)
-                .FirstOrDefaultAsync(s => s.Id == request.Id, ct);
+                .FirstOrDefaultAsync(s => s.Id == request.Request.Id, ct);
 
             if (survey is null)
                 throw new Exception("Survey not found");
 
             survey.Update(
-                request.Title,
-                request.Description,
-                request.StartDate,
-                request.EndDate,
+                request.Request.Title,
+                request.Request.Description,
+                request.Request.StartDate,
+                request.Request.EndDate,
                 userId
             );
 
-            survey.UpdateStatus(request.Status, userId);
+            survey.UpdateStatus(request.Request.Status, userId);
 
             var existingQuestions = survey.SurveyQuestions.ToList();
 
             foreach (var existing in existingQuestions)
             {
-                if (!request.Questions.Any(q => q.QuestionId == existing.QuestionId))
+                if (!request.Request.Questions.Any(q => q.QuestionId == existing.QuestionId))
                     context.SurveyQuestions.Remove(existing);
             }
 
-            foreach (var q in request.Questions)
+            foreach (var q in request.Request.Questions)
             {
                 var existing = existingQuestions.FirstOrDefault(x => x.QuestionId == q.QuestionId);
 

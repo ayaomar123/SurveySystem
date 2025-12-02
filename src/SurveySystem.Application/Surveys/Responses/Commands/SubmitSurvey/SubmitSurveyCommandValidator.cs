@@ -1,20 +1,20 @@
 ﻿using FluentValidation;
-using SurveySystem.Application.Surveys.Responses.Dtos;
+using SurveySystem.Application.Surveys.Responses.Commands.SubmitSurvey.Dtos;
 
-namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyResponse
+namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurvey
 {
-    public class SubmitSurveyResponseCommandValidator
-        : AbstractValidator<SubmitSurveyResponseCommand>
+    public class SubmitSurveyCommandValidator
+        : AbstractValidator<SubmitSurveyCommand>
     {
-        public SubmitSurveyResponseCommandValidator()
+        public SubmitSurveyCommandValidator()
         {
-            RuleFor(x => x.SurveyId)
+            RuleFor(x => x.Request.SurveyId)
                 .NotEmpty().WithMessage("SurveyId is required.");
 
-            RuleFor(x => x.Answers)
+            RuleFor(x => x.Request.Answers)
                 .NotEmpty().WithMessage("At least one answer is required.");
 
-            RuleForEach(x => x.Answers).ChildRules(answer =>
+            RuleForEach(x => x.Request.Answers).ChildRules(answer =>
             {
                 answer.RuleFor(a => a.QuestionId)
                       .NotEmpty().WithMessage("QuestionId is required.");
@@ -39,7 +39,7 @@ namespace SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyRespon
             });
         }
 
-        private static bool ValidateSingleAnswer(SubmitAnswerDto a)
+        private static bool ValidateSingleAnswer(SubmitSurveyAnswerDto a)
         {
             int count = 0;
 

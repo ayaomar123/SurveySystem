@@ -1,16 +1,9 @@
 ﻿using MediatR;
-using SurveySystem.Domain.Entites.Surveys.Enums;
+using SurveySystem.Application.Surveys.Commands.CreateSurvey.Dtos;
 
 namespace SurveySystem.Application.Surveys.Commands.CreateSurvey
 {
-    public sealed record SurveyQuestionItem(Guid QuestionId, int Order);
-
     public sealed record CreateSurveyCommand(
-        string Title,
-        string? Description,
-        SurveyStatus Status,
-        DateTime? StartDate,
-        DateTime? EndDate,
-        List<SurveyQuestionItem> Questions
+       CreateSurveyDto Request
     ) : IRequest<Guid>;
 }

@@ -10,16 +10,12 @@ import { User } from '../../auth/user.interface';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   constructor(public auth: AuthService) { }
-  user: User | null = null;
 
   onLogout() {
     this.auth.logout();
   }
 
-  ngOnInit(): void {
-    this.user = this.auth.user();
-    console.log(this.user);
-  }
+
 }

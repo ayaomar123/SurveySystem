@@ -2,6 +2,7 @@
 using SurveySystem.Api.Middlewares;
 using SurveySystem.Api.Services;
 using SurveySystem.Application.Interfaces;
+using System.Security.Claims;
 
 namespace Microsoft.Extensions.DependencyInjection;
 public static class DependencyInjection
@@ -10,12 +11,26 @@ public static class DependencyInjection
     {
         services
             .AddIdentity()
-             .AddConfiguredCors(configuration)
-            .AddSwagger();
+            .AddConfiguredCors(configuration)
+            .AddSwagger()
+            .AddPolicies();
         return services;
     }
 
-    public static IServiceCollection AddSwagger(this IServiceCollection services)
+    private static IServiceCollection AddPolicies(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Admin", policy =>
+                policy.RequireClaim(ClaimTypes.Role, "Admin"));
+
+            options.AddPolicy("Desginer", policy =>
+                policy.RequireClaim(ClaimTypes.Role, "Desginer"));
+        });
+        return services;
+    }
+
+    private static IServiceCollection AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
@@ -52,14 +67,14 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddIdentity(this IServiceCollection services)
+    private static IServiceCollection AddIdentity(this IServiceCollection services)
     {
         services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddHttpContextAccessor();
         return services;
     }
 
-    public static IServiceCollection AddConfiguredCors(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddConfiguredCors(this IServiceCollection services, IConfiguration configuration)
     {
         var origins = configuration
         .GetSection("Cors:AllowedOrigins")
@@ -79,7 +94,7 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IApplicationBuilder UseCoreMiddlewares(this IApplicationBuilder app, IConfiguration configuration)
+    public static IApplicationBuilder UseMiddlewares(this IApplicationBuilder app, IConfiguration configuration)
     {
 
         app.UseHttpsRedirection();

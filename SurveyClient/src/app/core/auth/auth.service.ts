@@ -1,5 +1,5 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { DestroyRef, inject, Injectable, signal, computed } from '@angular/core';
+import { inject, Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError, of, tap } from 'rxjs';
@@ -35,8 +35,21 @@ export class AuthService {
       return;
     }
 
-    const decoded = this.jwt.decodeToken(token);
-    this._user.set(decoded as User);
+    const decoded: any = this.jwt.decodeToken(token);
+
+    // استخراج الـ role من أي مكان
+    const role =
+      decoded['role'] ||
+      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ||
+      null;
+
+    // تخزين اليوزر داخل الإشارة (signal)
+    this._user.set({
+      ...decoded,
+      role: role
+    } as User);
+
+    console.log("Decoded User:", this._user());
   }
 
   private getToken(): string | null {
@@ -47,7 +60,9 @@ export class AuthService {
     localStorage.setItem('token', token);
   }
 
+  // signals
   isLoggedIn = computed(() => this._user() !== null);
+  role = computed(() => this._user()?.role ?? null);
 
   isAuthenticated(): boolean {
     const token = this.getToken();

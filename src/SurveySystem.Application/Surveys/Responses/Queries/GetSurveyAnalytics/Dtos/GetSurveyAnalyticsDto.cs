@@ -1,8 +1,8 @@
 ﻿using SurveySystem.Domain.Entites.Questions.Enums;
 
-namespace SurveySystem.Application.Surveys.Responses.Dtos
+namespace SurveySystem.Application.Surveys.Responses.Queries.GetSurveyAnalytics.Dtos
 {
-    public class SurveyAnalyticsDto
+    public class GetSurveyAnalyticsDto
     {
         public string Title { get; set; } = default!;
 

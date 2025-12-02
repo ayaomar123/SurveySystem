@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
-using SurveySystem.Domain.Entites.Surveys.Enums;
 
 namespace SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus
 {
@@ -15,16 +14,16 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus
             var userId = user.UserId ?? throw new Exception("User not authenticated");
 
             var survey = await context.Surveys
-                .FirstOrDefaultAsync(s => s.Id == request.Id, ct);
+                .FirstOrDefaultAsync(s => s.Id == request.Request.Id, ct);
 
             if (survey is null)
                 throw new Exception("Survey not found");
 
             survey.UpdateStatus(
-                request.Status,
+                request.Request.Status,
                 userId,
-                request.StartDate,
-                request.EndDate);
+                request.Request.StartDate,
+                request.Request.EndDate);
 
             await context.SaveChangesAsync(ct);
 

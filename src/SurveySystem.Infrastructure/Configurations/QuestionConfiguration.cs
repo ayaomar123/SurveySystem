@@ -22,9 +22,13 @@ namespace SurveySystem.Infrastructure.Configurations
 
             builder.Property(q => q.CreatedAt).IsRequired();
 
-            builder.HasMany(q => q.Choices).WithOne().HasForeignKey(c => c.QuestionId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(q => q.Choices)
+                .WithOne()
+                .HasForeignKey(c => c.QuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(q => q.SliderConfig).WithOne().HasForeignKey<SliderConfig>(s => s.QuestionId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(q => q.SliderConfig).WithOne()
+                .HasForeignKey<SliderConfig>(s => s.QuestionId).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(q => q.StarConfig).WithOne().HasForeignKey<StarConfig>(s => s.QuestionId).OnDelete(DeleteBehavior.Cascade);
 

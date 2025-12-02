@@ -1,12 +1,9 @@
 ﻿using MediatR;
-using SurveySystem.Domain.Entites.Surveys.Enums;
+using SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus.Dtos;
 
 namespace SurveySystem.Application.Surveys.Commands.UpdateSurveyStatus
 {
     public sealed record UpdateSurveyStatusCommand(
-        Guid Id,
-        SurveyStatus Status,
-        DateTime? StartDate,
-        DateTime? EndDate
+       UpdateSurveyStatusDto Request
         ) : IRequest<Unit>;
 }

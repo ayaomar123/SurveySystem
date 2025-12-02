@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SurveySystem.Api.Requests.Users;
 using SurveySystem.Application.Users.Commands.CreateUser;
@@ -9,6 +10,7 @@ namespace SurveySystem.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Admin")]
     public class UsersController(IMediator mediator) : ControllerBase
     {
         [HttpGet]

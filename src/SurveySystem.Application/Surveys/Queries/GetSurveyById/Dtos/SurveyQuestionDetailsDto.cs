@@ -1,7 +1,7 @@
 ﻿using SurveySystem.Application.Questionns.Dtos;
 
 public sealed record SurveyQuestionDetailsDto(
-        Guid Id,
+        Guid? Id,
         string Title,
         string? Description,
         int QuestionType,

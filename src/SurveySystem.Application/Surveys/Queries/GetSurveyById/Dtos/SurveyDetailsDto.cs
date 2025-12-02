@@ -1,7 +1,6 @@
-﻿using SurveySystem.Application.Questionns.Dtos;
-using SurveySystem.Domain.Entites.Surveys.Enums;
+﻿using SurveySystem.Domain.Entites.Surveys.Enums;
 
-namespace SurveySystem.Application.Surveys.Dtos.Details
+namespace SurveySystem.Application.Surveys.Queries.GetSurveyById.Dtos
 {
     public sealed record SurveyDetailsDto(
         Guid Id,

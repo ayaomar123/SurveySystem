@@ -37,6 +37,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCoreMiddlewares(builder.Configuration);
+app.UseMiddlewares(builder.Configuration);
 app.MapControllers();
 app.Run();

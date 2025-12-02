@@ -6,20 +6,20 @@ namespace SurveySystem.Application.Surveys.Commands.UpdateSurvey
     {
         public UpdateSurveyCommandValidator()
         {
-            RuleFor(x => x.Id)
+            RuleFor(x => x.Request.Id)
                 .NotEmpty();
 
-            RuleFor(x => x.Title)
+            RuleFor(x => x.Request.Title)
                 .NotEmpty()
                 .MaximumLength(200);
 
-            RuleFor(x => x.Status)
+            RuleFor(x => x.Request.Status)
                 .IsInEnum();
 
-            RuleFor(x => x.StartDate)
-                .LessThan(x => x.EndDate)
-                .When(x => x.StartDate.HasValue && x.EndDate.HasValue)
-                .WithMessage("StartDate must be before EndDate.");
+            RuleFor(x => x.Request.StartDate)
+                .LessThan(x => x.Request.EndDate)
+                .When(x => x.Request.StartDate.HasValue && x.Request.EndDate.HasValue)
+                .WithMessage("StartDate > EndDate");
         }
     }
 }

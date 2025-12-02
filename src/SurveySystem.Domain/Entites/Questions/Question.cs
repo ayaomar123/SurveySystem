@@ -1,5 +1,6 @@
 ﻿using SurveySystem.Domain.Entites.Questions.Enums;
 using SurveySystem.Domain.Entites.Surveys;
+using System.Xml.Linq;
 
 namespace SurveySystem.Domain.Entites.Questions
 {
@@ -38,6 +39,10 @@ namespace SurveySystem.Domain.Entites.Questions
             string? description,
             bool required)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
             return new Question(title, QuestionType.TextInput, description, required);
         }
 
@@ -46,16 +51,30 @@ namespace SurveySystem.Domain.Entites.Questions
             string? description,
             bool required)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
             return new Question(title, QuestionType.YesOrNo, description, required);
         }
 
         public static Question CreateChoiceQuestion(
             string title,
-            QuestionType type,
+            QuestionType type, //sningle or multiple
             string? description,
             bool required,
             List<QuestionChoice> choices)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
+
+            if (choices.Count == 0)
+            {
+                throw new ArgumentException("choices required");
+            }
+
             var q = new Question(title, type, description, required);
             q.Choices = choices;
 
@@ -68,6 +87,15 @@ namespace SurveySystem.Domain.Entites.Questions
             bool required,
             SliderConfig config)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
+            if (config == null)
+            {
+                throw new ArgumentException("config required");
+            }
+
             var q = new Question(title, QuestionType.Slider, description, required);
             q.SliderConfig = config;
 
@@ -80,6 +108,15 @@ namespace SurveySystem.Domain.Entites.Questions
             bool required,
             StarConfig stars)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
+
+            if (stars == null)
+            {
+                throw new ArgumentException("stars required");
+            }
             var q = new Question(title, QuestionType.Rating, description, required);
             q.StarConfig = stars;
 
@@ -93,6 +130,10 @@ namespace SurveySystem.Domain.Entites.Questions
             bool isRequired,
             bool status)
         {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("title required");
+            }
             Title = title;
             Description = description;
             QuestionType = (QuestionType)type;

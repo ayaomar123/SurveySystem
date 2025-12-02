@@ -2,6 +2,8 @@
 
 namespace SurveySystem.Api.Requests.Surveys
 {
-    public sealed record UpdateSurveyStatusRequest(SurveyStatus Status, DateTime? StartDate,
+    public sealed record UpdateSurveyStatusRequest
+        (SurveyStatus Status,
+        DateTime? StartDate,
         DateTime? EndDate);
 }

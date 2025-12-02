@@ -6,10 +6,11 @@ import { Survey, SurveyCreate, SurveyQuestionOrder } from './interfaces/survey';
 import { Question } from '../questions/interfaces/question';
 import { SurveyStatusPipe } from "./pipes/survey-status.pipe";
 import { RouterLink } from "@angular/router";
+import { ChangeStatusComponent } from "./change-status/change-status.component";
 
 @Component({
   selector: 'app-surveys',
-  imports: [CommonModule, ReactiveFormsModule, SurveyStatusPipe, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, SurveyStatusPipe, RouterLink, ChangeStatusComponent],
   templateUrl: './surveys.component.html',
   styleUrl: './surveys.component.css'
 })
@@ -22,6 +23,28 @@ export class SurveysComponent implements OnInit {
 
   isEditing = false;
   selectedQuestions: SurveyQuestionOrder[] = [];
+
+  showModal = false;
+  selectedSurvey: any = null;
+
+  toggleModal(survey: any) {
+    this.selectedSurvey = survey;
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedSurvey = null;
+  }
+
+  saveStatus(data: any) {
+    console.log("Data to send:", data);
+
+    // TODO: send to API
+    // this.service.updateStatus(data).subscribe()
+
+    this.closeModal();
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -103,7 +126,7 @@ export class SurveysComponent implements OnInit {
     });
   }
 
-  
+
 
   private formatDate(date: Date | null): string | null {
     return date ? new Date(date).toISOString().substring(0, 10) : null;

@@ -34,6 +34,19 @@ namespace SurveySystem.Api.Middlewares
 
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
+            catch (KeyNotFoundException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.ContentType = "application/json";
+
+                var response = new
+                {
+                    message = ex.Message,
+                    detail = "Not Found"
+                };
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            }
             catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

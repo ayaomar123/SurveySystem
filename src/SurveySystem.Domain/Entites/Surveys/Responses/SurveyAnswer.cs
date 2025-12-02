@@ -17,7 +17,6 @@ namespace SurveySystem.Domain.Entites.Surveys.Responses
 
         private SurveyAnswer() { }
 
-        //text question | yes/no question | slider question | star question
         public static SurveyAnswer CreateValue(Guid questionId, string value)
         {
             return new SurveyAnswer

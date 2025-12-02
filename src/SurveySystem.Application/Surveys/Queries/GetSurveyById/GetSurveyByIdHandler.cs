@@ -2,24 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Application.Questionns.Dtos;
-using SurveySystem.Application.Surveys.Dtos.Details;
-using System.Linq;
+using SurveySystem.Application.Surveys.Queries.GetSurveyById.Dtos;
+using SurveySystem.Domain.Entites.Surveys.Enums;
 
 namespace SurveySystem.Application.Surveys.Queries.GetSurveyById
 {
-    public sealed class GetSurveyByIdQueryHandler
+    public sealed class GetSurveyByIdQueryHandler(IAppDbContext context, ICurrentUser user)
         : IRequestHandler<GetSurveyByIdQuery, SurveyDetailsDto>
     {
-        private readonly IAppDbContext _context;
-
-        public GetSurveyByIdQueryHandler(IAppDbContext context)
-        {
-            _context = context;
-        }
 
         public async Task<SurveyDetailsDto> Handle(GetSurveyByIdQuery request, CancellationToken ct)
         {
-            var survey = await _context.Surveys
+            var userId = user.UserId ?? null;
+
+            var survey = await context.Surveys
                 .Include(s => s.CreatedByUser)
                 .Include(s => s.LastModifiedByUser)
                 .Include(s => s.SurveyQuestions)
@@ -33,8 +29,8 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveyById
                         .ThenInclude(q => q.StarConfig)
                 .FirstOrDefaultAsync(s => s.Id == request.Id, ct);
 
-            if (survey is null)
-                throw new Exception("Survey not found");
+            if (survey is null || (survey.Status != SurveyStatus.Active && userId is null))
+                throw new KeyNotFoundException("Survey not found");
 
             var questions = survey.SurveyQuestions
                 .OrderBy(q => q.Order)
@@ -68,7 +64,7 @@ namespace SurveySystem.Application.Surveys.Queries.GetSurveyById
             return new SurveyDetailsDto(
                 survey.Id,
                 survey.Title,
-                survey.Description,
+                survey.Description ?? "",
                 survey.Status,
                 survey.StartDate,
                 survey.EndDate,

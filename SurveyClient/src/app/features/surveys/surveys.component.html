@@ -120,7 +120,7 @@
         </div>
 
         <div class="flex items-start space-x-3">
-          <button title="Toggle Status"
+          <button (click)="toggleModal(survey)" title="Toggle Status"
             class="inline-block mt-3 px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full">Toggle
             Status</button>
           <button (click)="onEdit(survey, addFormElement)"
@@ -134,5 +134,6 @@
         {{survey.lastModifiedDate | date:'medium'}}</p>
     </div>
   </div>
-
+  <app-change-status [show]="showModal" [survey]="selectedSurvey" (close)="closeModal()" (save)="saveStatus($event)">
+  </app-change-status>
 </div>

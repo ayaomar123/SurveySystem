@@ -1,89 +1,94 @@
-<div class="min-h-screen bg-gray-50 px-6 py-10">
+<div *ngIf="isActive else notActive">
+  <div class="min-h-screen bg-gray-50 px-6 py-10">
 
-  <div class="max-w-3xl mx-auto bg-indigo-600 p-6 rounded-t-lg shadow">
-    <h1 class="text-4xl font-bold text-white mb-2">{{survey?.title}}</h1>
-    <p class="text-white">{{survey?.description}}</p>
-  </div>
-
-  <form *ngIf="survey && form" [formGroup]="form" (ngSubmit)="onSubmit()"
-    class="max-w-3xl mx-auto bg-white p-8 shadow space-y-10">
-
-    <div *ngFor="let q of survey.questions; index as i" class="border-b border-gray-200 pb-8">
-
-      <label class="block text-xl font-semibold text-gray-800 mb-3">
-        {{i + 1}}. {{q.title}} <span *ngIf="q.isRequired" class="text-red-500">*</span>
-      </label>
-
-      <p *ngIf="q.description" class="text-sm text-gray-400 mb-4">
-        {{q.description}}
-      </p>
-
-      <!-- TEXT -->
-      <div *ngIf="q.questionType === 0">
-        <input [required]="q.isRequired" type="text" [formControlName]="q.id"
-          class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
-
-        <div *ngIf="form.get(q.id)?.touched && form.get(q.id)?.invalid" class="text-red-500 text-sm mt-1">
-          <div *ngIf="form.get(q.id)?.errors?.['required']">
-            This field is required.
-          </div>
-        </div>
-      </div>
-
-      <!-- RADIO -->
-      <div *ngIf="q.questionType === 1" class="space-y-2">
-        <label *ngFor="let c of q.choices" class="flex items-center gap-2">
-          <input type="radio" [formControlName]="q.id" [value]="c.id" class="w-4 h-4 text-indigo-600">
-          {{c.text}}
-        </label>
-      </div>
-
-      <!-- CHECKBOX -->
-      <div *ngIf="q.questionType === 2" class="space-y-2">
-        <label *ngFor="let c of q.choices" class="flex items-center gap-2">
-          <input type="checkbox" [value]="c.id" class="w-4 h-4 text-indigo-600"
-            (change)="onCheckboxChange(q.id, c.id, $event)">
-          {{c.text}}
-        </label>
-      </div>
-
-      <!-- YES / NO -->
-      <div *ngIf="q.questionType === 3" class="flex gap-6">
-        <label class="flex items-center gap-2">
-          <input type="radio" [formControlName]="q.id" value="yes" class="w-4 h-4 text-indigo-600">
-          Yes
-        </label>
-
-        <label class="flex items-center gap-2">
-          <input type="radio" [formControlName]="q.id" value="no" class="w-4 h-4 text-indigo-600">
-          No
-        </label>
-      </div>
-
-      <!-- RATING -->
-      <div *ngIf="q.questionType === 4" class="flex gap-2 text-3xl text-yellow-400">
-        <span *ngFor="let s of [].constructor(q.starConfig?.maxStar || 5); index as i" (click)="setRating(q.id, i + 1)"
-          class="cursor-pointer">
-          {{ (i + 1) <= form.get(q.id)?.value ? '★' : '☆' }} </span>
-      </div>
-
-      <!-- SLIDER -->
-      <div *ngIf="q.questionType === 5">
-        <input type="range" class="w-full" [min]="q.sliderConfig?.min" [max]="q.sliderConfig?.max"
-          [step]="q.sliderConfig?.step" [formControlName]="q.id">
-
-        <div class="text-gray-500 mt-2">
-          {{q.sliderConfig?.unitLabel}}: {{form.get(q.id)?.value}}
-        </div>
-      </div>
-
+    <div class="max-w-3xl mx-auto bg-indigo-600 p-6 rounded-t-lg shadow">
+      <h1 class="text-4xl font-bold text-white mb-2">{{survey?.title}}</h1>
+      <p class="text-white">{{survey?.description}}</p>
     </div>
 
-    <button type="submit"
-      class="w-full bg-indigo-600 text-white py-3 rounded-lg text-lg font-medium hover:bg-indigo-700">
-      Submit Survey
-    </button>
+    <form *ngIf="survey && form" [formGroup]="form" (ngSubmit)="onSubmit()"
+      class="max-w-3xl mx-auto bg-white p-8 shadow space-y-10">
 
-  </form>
+      <div *ngFor="let q of survey.questions; index as i" class="border-b border-gray-200 pb-8">
 
+        <label class="block text-xl font-semibold text-gray-800 mb-3">
+          {{i + 1}}. {{q.title}} <span *ngIf="q.isRequired" class="text-red-500">*</span>
+        </label>
+
+        <p *ngIf="q.description" class="text-sm text-gray-400 mb-4">
+          {{q.description}}
+        </p>
+
+        <!-- TEXT -->
+        <div *ngIf="q.questionType === 0">
+          <input [required]="q.isRequired" type="text" [formControlName]="q.id"
+            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+
+          <div *ngIf="form.get(q.id)?.touched && form.get(q.id)?.invalid" class="text-red-500 text-sm mt-1">
+            <div *ngIf="form.get(q.id)?.errors?.['required']">
+              This field is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- RADIO -->
+        <div *ngIf="q.questionType === 1" class="space-y-2">
+          <label *ngFor="let c of q.choices" class="flex items-center gap-2">
+            <input type="radio" [formControlName]="q.id" [value]="c.id" class="w-4 h-4 text-indigo-600">
+            {{c.text}}
+          </label>
+        </div>
+
+        <!-- CHECKBOX -->
+        <div *ngIf="q.questionType === 2" class="space-y-2">
+          <label *ngFor="let c of q.choices" class="flex items-center gap-2">
+            <input type="checkbox" [value]="c.id" class="w-4 h-4 text-indigo-600"
+              (change)="onCheckboxChange(q.id, c.id, $event)">
+            {{c.text}}
+          </label>
+        </div>
+
+        <!-- YES / NO -->
+        <div *ngIf="q.questionType === 3" class="flex gap-6">
+          <label class="flex items-center gap-2">
+            <input type="radio" [formControlName]="q.id" value="yes" class="w-4 h-4 text-indigo-600">
+            Yes
+          </label>
+
+          <label class="flex items-center gap-2">
+            <input type="radio" [formControlName]="q.id" value="no" class="w-4 h-4 text-indigo-600">
+            No
+          </label>
+        </div>
+
+        <!-- RATING -->
+        <div *ngIf="q.questionType === 4" class="flex gap-2 text-3xl text-yellow-400">
+          <span *ngFor="let s of [].constructor(q.starConfig?.maxStar || 5); index as i"
+            (click)="setRating(q.id, i + 1)" class="cursor-pointer">
+            {{ (i + 1) <= form.get(q.id)?.value ? '★' : '☆' }} </span>
+        </div>
+
+        <!-- SLIDER -->
+        <div *ngIf="q.questionType === 5">
+          <input type="range" class="w-full" [min]="q.sliderConfig?.min" [max]="q.sliderConfig?.max"
+            [step]="q.sliderConfig?.step" [formControlName]="q.id">
+
+          <div class="text-gray-500 mt-2">
+            {{q.sliderConfig?.unitLabel}}: {{form.get(q.id)?.value}}
+          </div>
+        </div>
+
+      </div>
+
+      <button type="submit"
+        class="w-full bg-indigo-600 text-white py-3 rounded-lg text-lg font-medium hover:bg-indigo-700">
+        Submit Survey
+      </button>
+
+    </form>
+
+  </div>
 </div>
+<ng-template #notActive>
+  this survey is not avaialbele
+</ng-template>

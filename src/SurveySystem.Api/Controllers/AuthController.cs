@@ -19,7 +19,7 @@ namespace SurveySystem.Api.Controllers
         }
 
         [HttpGet("statics")]
-        [AllowAnonymous]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> getStatics()
         {
             var result = await mediator.Send(new GetStaticQuery());

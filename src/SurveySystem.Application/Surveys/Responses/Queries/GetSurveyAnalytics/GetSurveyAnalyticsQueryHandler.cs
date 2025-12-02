@@ -1,24 +1,24 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SurveySystem.Application.Interfaces;
-using SurveySystem.Application.Surveys.Responses.Dtos;
+using SurveySystem.Application.Surveys.Responses.Queries.GetSurveyAnalytics.Dtos;
 using SurveySystem.Domain.Entites.Questions.Enums;
 
 namespace SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse
 {
     public class GetSurveyAnalyticsQueryHandler(IAppDbContext context)
-        : IRequestHandler<GetSurveyAnalyticsQuery, SurveyAnalyticsDto>
+        : IRequestHandler<GetSurveyAnalyticsQuery, GetSurveyAnalyticsDto>
     {
-        public async Task<SurveyAnalyticsDto> Handle(GetSurveyAnalyticsQuery request, CancellationToken ct)
+        public async Task<GetSurveyAnalyticsDto> Handle(GetSurveyAnalyticsQuery request, CancellationToken ct)
         {
             var survey = await context.Surveys
                 .Include(s => s.SurveyQuestions)
                     .ThenInclude(sq => sq.Question)
-                        .ThenInclude(q => q.Choices)
+                        .ThenInclude(q => q!.Choices)
                 .Include(s => s.SurveyQuestions)
-                    .ThenInclude(sq => sq.Question.SliderConfig)
+                    .ThenInclude(sq => sq.Question!.SliderConfig)
                 .Include(s => s.SurveyQuestions)
-                    .ThenInclude(sq => sq.Question.StarConfig)
+                    .ThenInclude(sq => sq.Question!.StarConfig)
                 .FirstOrDefaultAsync(s => s.Id == request.SurveyId, ct);
 
             if (survey is null)
@@ -29,7 +29,7 @@ namespace SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse
                 .Where(r => r.SurveyId == request.SurveyId)
                 .ToListAsync(ct);
 
-            var dto = new SurveyAnalyticsDto
+            var dto = new GetSurveyAnalyticsDto
             {
                 Title = survey.Title,
                 TotalResponses = responses.Count

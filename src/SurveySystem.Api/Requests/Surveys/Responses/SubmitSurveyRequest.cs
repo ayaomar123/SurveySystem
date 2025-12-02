@@ -1,8 +1,6 @@
-﻿using SurveySystem.Application.Surveys.Responses.Dtos;
-
-namespace SurveySystem.Api.Requests.Surveys
+﻿namespace SurveySystem.Api.Requests.Surveys.Responses
 {
-    public class SubmitSurveyResponseRequest
+    public class SubmitSurveyRequest
     {
         public List<AnswerRequest> Answers { get; set; } = new();
     }
