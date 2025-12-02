@@ -9,7 +9,7 @@ namespace SurveySystem.Infrastructure.Authentication
 {
     public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerator
     {
-        public string GenerateToken(Guid userId, string email, string role)
+        public string GenerateToken(Guid userId, string name, string email, string role)
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
 
@@ -22,6 +22,7 @@ namespace SurveySystem.Infrastructure.Authentication
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(JwtRegisteredClaimNames.Name, name),
             new Claim(ClaimTypes.Role, role)
         };
 

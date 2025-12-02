@@ -1,11 +1,15 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
 
-namespace SurveySystem.Application.Users.Commands.CreateUser
+namespace SurveySystem.Application.Users.Commands.UpdateUser
 {
-    public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+    public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     {
-        public CreateUserCommandValidator()
+        public UpdateUserCommandValidator()
         {
+            RuleFor(x => x.Id)
+                  .NotEmpty().WithMessage("ID is required.");
+
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MaximumLength(100).WithMessage("Name cannot exceed 100 characters.");

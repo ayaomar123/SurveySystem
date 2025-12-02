@@ -32,6 +32,7 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./core/auth/login/pages/login-page/login-page.component').then(mod => mod.LoginPageComponent),
-    canActivate: [accountGuard]
+    canActivate: [accountGuard],
+    data: { noLayout: true }
   }
 ];

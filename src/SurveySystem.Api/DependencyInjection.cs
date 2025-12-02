@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using SurveySystem.Api.Middlewares;
 using SurveySystem.Api.Services;
 using SurveySystem.Application.Interfaces;
 
@@ -80,6 +81,7 @@ public static class DependencyInjection
 
     public static IApplicationBuilder UseCoreMiddlewares(this IApplicationBuilder app, IConfiguration configuration)
     {
+
         app.UseHttpsRedirection();
 
         app.UseCors("survey-system");
@@ -87,6 +89,8 @@ public static class DependencyInjection
         app.UseAuthentication();
 
         app.UseAuthorization();
+
+        app.UseMiddleware<GlobalExceptionMiddleware>();
 
         return app;
     }

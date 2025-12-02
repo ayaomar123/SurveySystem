@@ -10,6 +10,7 @@ using SurveySystem.Application.Surveys.Queries.GetSurveys;
 using SurveySystem.Application.Surveys.Responses.Commands.SubmitSurveyResponse;
 using SurveySystem.Application.Surveys.Responses.Dtos;
 using SurveySystem.Application.Surveys.Responses.Queries.GetSurveyResponse;
+using SurveySystem.Domain.Entites.Surveys.Enums;
 
 namespace SurveySystem.Api.Controllers
 {
@@ -19,7 +20,9 @@ namespace SurveySystem.Api.Controllers
     public class SurveysController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get
+            ([FromQuery] string? title, [FromQuery] SurveyStatus? status,
+            [FromQuery] bool? hasResponses = null)
         {
             var questions = await mediator.Send(new GetSurveyQuery());
             return Ok(questions);

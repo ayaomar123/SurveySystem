@@ -23,6 +23,7 @@ namespace SurveySystem.Application.Users.Commands.Login
 
             var token = tokenGenerator.GenerateToken(
                 user.Id,
+                user.Name,
                 user.Email,
                 user.Role.ToString()
             );

@@ -17,9 +17,9 @@ namespace SurveySystem.Api.Controllers
     public class QuestionsController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string? title, [FromQuery] bool? status)
         {
-            var questions = await mediator.Send(new GetQuestionsQuery());
+            var questions = await mediator.Send(new GetQuestionsQuery(title, status));
             return Ok(questions);
         }
 

@@ -1,13 +1,12 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { DestroyRef, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { User } from './user.interface';
-import { Observable, catchError, of, tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { Login, LoginSuccess } from './login/interfaces';
 import { LoginResponse } from './login/types/login-response.type';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IS_PUBLIC } from './auth.interceptor';
+import { User } from './user.interface';
 import { environment } from '../../../environments/environment.development';
 
 @Injectable({
@@ -16,36 +15,61 @@ import { environment } from '../../../environments/environment.development';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly jwtHelper = inject(JwtHelperService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly CONTEXT = { context: new HttpContext().set(IS_PUBLIC, true) };
-  private readonly TOKEN_EXPIRY_THRESHOLD_MINUTES = 5;
+  private readonly jwt = inject(JwtHelperService);
 
-  get user(): WritableSignal<User | null> {
-    const token = localStorage.getItem('token');
-    return signal(token ? this.jwtHelper.decodeToken(token) : null);
+  private readonly CONTEXT = {
+    context: new HttpContext().set(IS_PUBLIC, true)
+  };
+
+  private readonly _user = signal<User | null>(null);
+  readonly user = this._user.asReadonly();
+
+  constructor() {
+    this.initializeUser();
   }
 
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+  private initializeUser(): void {
+    const token = this.getToken();
+    if (!token || this.jwt.isTokenExpired(token)) {
+      this._user.set(null);
+      return;
+    }
+
+    const decoded = this.jwt.decodeToken(token);
+    this._user.set(decoded as User);
   }
+
+  private getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  private saveToken(token: string) {
+    localStorage.setItem('token', token);
+  }
+
+  isLoggedIn = computed(() => this._user() !== null);
 
   isAuthenticated(): boolean {
-    return !this.jwtHelper.isTokenExpired();
+    const token = this.getToken();
+    return token !== null && !this.jwt.isTokenExpired(token);
   }
 
-  login(body: Login): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/login`, body, this.CONTEXT)
+  login(body: Login) {
+    return this.http
+      .post<LoginResponse>(`${environment.apiUrl}/Auth/login`, body, this.CONTEXT)
       .pipe(
         catchError(error => {
-          if (error.status === 401) {
-            console.error('Invalid credentials');
-          }
-          return of();
+          console.error('Login failed:', error);
+          return of(null);
         }),
-        tap(data => {
-          const loginSuccessData = data as LoginSuccess;
-          this.storeTokens(loginSuccessData);
+        tap(response => {
+          if (!response) return;
+
+          const data = response as LoginSuccess;
+
+          this.saveToken(data.token);
+          this.initializeUser();
+
           this.router.navigate(['/']);
         })
       );
@@ -53,10 +77,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this._user.set(null);
     this.router.navigate(['/login']);
-  }
-
-  storeTokens(data: LoginSuccess): void {
-    localStorage.setItem('token', data.token);
   }
 }

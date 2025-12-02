@@ -45,5 +45,29 @@
             return new User(name, email, passwordHash, userRole);
         }
 
+
+        public void Update(string name, string email, string passwordHash, UserRole userRole)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("name required");
+            }
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ArgumentException("email required");
+            }
+
+            if (string.IsNullOrWhiteSpace(passwordHash))
+            {
+                throw new ArgumentException("password required");
+            }
+
+            Name = name;
+            Email = email;
+            PasswordHash = passwordHash;
+            Role = userRole;
+        }
+
     }
 }

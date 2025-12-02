@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SurveySystem.Api.Middlewares;
 using SurveySystem.Application.Interfaces;
 using SurveySystem.Infrastructure;
 using SurveySystem.Infrastructure.Authentication;

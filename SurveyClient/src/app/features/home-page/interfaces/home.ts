@@ -10,6 +10,7 @@ export interface Statics {
 export interface Survey {
   id: number;
   title: string;
+  totalResonses: number;
 }
 
 export interface SurveyAnalytics {

@@ -1,6 +1,6 @@
 ﻿using SurveySystem.Domain.Entites;
 
-namespace SurveySystem.Application.Users.Dtos
+namespace SurveySystem.Api.Requests.Users
 {
     public class CreateUserRequest
     {

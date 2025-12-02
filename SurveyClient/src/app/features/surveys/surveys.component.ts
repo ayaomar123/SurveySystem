@@ -18,6 +18,7 @@ export class SurveysComponent implements OnInit {
   surveys: Survey[] = [];
   questions: Question[] = [];
   addForm!: FormGroup;
+  statusForm!: FormGroup;
 
   isEditing = false;
   selectedQuestions: SurveyQuestionOrder[] = [];
@@ -52,7 +53,7 @@ export class SurveysComponent implements OnInit {
   }
 
   loadQuestions() {
-    this.service.loadQuestions().subscribe({
+    this.service.loadQuestions({ status: true }).subscribe({
       next: res => this.questions = res
     });
   }
@@ -101,6 +102,8 @@ export class SurveysComponent implements OnInit {
       questions: this.selectedQuestions
     });
   }
+
+  
 
   private formatDate(date: Date | null): string | null {
     return date ? new Date(date).toISOString().substring(0, 10) : null;

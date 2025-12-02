@@ -10,6 +10,7 @@
 
     public sealed record ResponseDto(
         Guid Id,
-        String Title
+        String Title,
+        int TotalResonses
         );
 }
