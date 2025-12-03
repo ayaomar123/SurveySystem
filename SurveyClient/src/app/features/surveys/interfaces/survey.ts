@@ -42,3 +42,11 @@ export interface SurveyAnswers {
   selectedChoiceId?: string | null;
   selectedChoices?: string[] | null;
 }
+
+
+export interface UpdateStatus {
+  id: number,
+  status: number;
+  startDate?: Date | null;
+  endDate?: Date | null;
+}

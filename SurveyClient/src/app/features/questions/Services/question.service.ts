@@ -31,7 +31,18 @@ export class QuestionService implements OnInit {
   }
 
   createQuestion(question: Question) {
-    return this.http.post(this.apiUrl, question);
+    return this.http
+      .post(this.apiUrl, question)
+      .pipe(
+        catchError(error => {
+          console.error(error);
+          return of(error);
+        }),
+        tap(response => {
+          if (!response) return;
+          const data = response;
+        })
+      );
   }
 
   updateQuestion(id: string, question: Question) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SurveyService } from './services/survey.service';
-import { Survey, SurveyCreate, SurveyQuestionOrder } from './interfaces/survey';
+import { Survey, SurveyCreate, SurveyQuestionOrder, UpdateStatus } from './interfaces/survey';
 import { Question } from '../questions/interfaces/question';
 import { SurveyStatusPipe } from "./pipes/survey-status.pipe";
 import { RouterLink } from "@angular/router";
@@ -20,31 +20,10 @@ export class SurveysComponent implements OnInit {
   questions: Question[] = [];
   addForm!: FormGroup;
   statusForm!: FormGroup;
-
   isEditing = false;
   selectedQuestions: SurveyQuestionOrder[] = [];
-
   showModal = false;
   selectedSurvey: any = null;
-
-  toggleModal(survey: any) {
-    this.selectedSurvey = survey;
-    this.showModal = true;
-  }
-
-  closeModal() {
-    this.showModal = false;
-    this.selectedSurvey = null;
-  }
-
-  saveStatus(data: any) {
-    console.log("Data to send:", data);
-
-    // TODO: send to API
-    // this.service.updateStatus(data).subscribe()
-
-    this.closeModal();
-  }
 
   constructor(
     private fb: FormBuilder,
@@ -63,8 +42,8 @@ export class SurveysComponent implements OnInit {
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200)]],
       description: [''],
       status: [0, Validators.required],
-      startDate: [new Date()],
-      endDate: [new Date()],
+      startDate: [null],
+      endDate: [null],
       questions: [[]]
     });
   }
@@ -76,22 +55,21 @@ export class SurveysComponent implements OnInit {
   }
 
   loadQuestions() {
-    this.service.loadQuestions({ status: true }).subscribe({
+    this.service.loadQuestions().subscribe({
       next: res => this.questions = res
     });
   }
 
   onSubmit() {
+    if (this.addForm.invalid) return;
+
     const payload: SurveyCreate = {
-      id: this.addForm.value.id,
-      title: this.addForm.value.title,
-      description: this.addForm.value.description,
+      ...this.addForm.value,
+      questions: this.selectedQuestions,
       status: Number(this.addForm.value.status),
-      startDate: this.addForm.value.startDate ?? null,
-      endDate: this.addForm.value.endDate ?? null,
-      questions: this.selectedQuestions
     };
 
+    console.log('Payload to submit:', payload);
     const request =
       payload.id === 0
         ? this.service.createSurvey(payload)
@@ -101,6 +79,9 @@ export class SurveysComponent implements OnInit {
       next: () => {
         this.loadSurveys();
         this.clearForm();
+      },
+      error: err => {
+        alert('Error submitting survey:' + err.error.errors);
       }
     });
   }
@@ -108,25 +89,18 @@ export class SurveysComponent implements OnInit {
     this.isEditing = true;
     formElement.classList.remove('hidden');
 
-    this.clearForm();
-
     this.selectedQuestions = (survey.questions ?? []).map(q => ({
       questionId: q.questionId,
       order: q.order
     }));
 
     this.addForm.patchValue({
-      id: survey.id,
-      title: survey.title,
-      description: survey.description,
-      status: survey.status,
+      ...survey,
       startDate: this.formatDate(survey.startDate),
       endDate: this.formatDate(survey.endDate),
       questions: this.selectedQuestions
     });
   }
-
-
 
   private formatDate(date: Date | null): string | null {
     return date ? new Date(date).toISOString().substring(0, 10) : null;
@@ -147,9 +121,8 @@ export class SurveysComponent implements OnInit {
     this.selectedQuestions = [];
   }
 
-  onQuestionToggle(questionId: string, event: Event) {
+  toggleQuestion(questionId: string, event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-
     if (checked) {
       this.addQuestion(questionId);
     } else {
@@ -157,29 +130,46 @@ export class SurveysComponent implements OnInit {
     }
   }
 
+  isChecked(questionId: string): boolean {
+    return this.selectedQuestions.some(q => q.questionId === questionId);
+  }
+
   private addQuestion(questionId: string) {
-    if (!this.isQuestionSelected(questionId)) {
-      this.selectedQuestions.push({ questionId, order: 1 });
-    }
+    this.selectedQuestions.push({ questionId, order: this.selectedQuestions.length + 1 });
   }
 
   private removeQuestion(questionId: string) {
     this.selectedQuestions = this.selectedQuestions.filter(q => q.questionId !== questionId);
   }
 
-  onOrderChange(questionId: string, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const q = this.selectedQuestions.find(x => x.questionId === questionId);
-
-    if (q) q.order = Number(input.value);
-  }
-
-  isQuestionSelected(questionId: string): boolean {
-    return this.selectedQuestions.some(q => q.questionId === questionId);
-  }
 
   getQuestionOrder(questionId: string): number | null {
     return this.selectedQuestions.find(q => q.questionId === questionId)?.order ?? null;
+  }
+
+  toggleModal(survey: any) {
+    this.selectedSurvey = survey;
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedSurvey = null;
+  }
+
+  saveStatus(data: UpdateStatus) {
+    const payload: UpdateStatus = {
+      id: data.id,
+      status: Number(data.status),
+      startDate: data.startDate || null,
+      endDate: data.endDate || null
+    };
+
+    this.service.updateSurveyStatus(payload).subscribe({
+      next: () => this.loadSurveys()
+    });
+
+    this.closeModal();
   }
 
 }

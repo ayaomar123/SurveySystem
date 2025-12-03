@@ -1,8 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
-import { Survey, SurveyCreate, SurveySubmit } from '../interfaces/survey';
+import { Survey, SurveyCreate, SurveySubmit, UpdateStatus } from '../interfaces/survey';
 import { Question } from '../../questions/interfaces/question';
+import { catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -31,22 +32,9 @@ export class SurveyService {
     return this.http.get<Survey[]>(this.apiUrl, { params });
   }
 
-  /*loadQuestions() {
+
+  loadQuestions() {
     return this.http.get<Question[]>(this.apiQuestionsUrl);
-  }*/
-
-  loadQuestions(filters?: { title?: string; status?: boolean }) {
-    let params = new HttpParams();
-
-    if (filters?.title) {
-      params = params.set('title', filters.title);
-    }
-
-    if (filters?.status !== undefined && filters?.status !== null) {
-      params = params.set('status', filters.status);
-    }
-
-    return this.http.get<Question[]>(this.apiQuestionsUrl, { params });
   }
 
   getSurveyById(id: string) {
@@ -54,7 +42,14 @@ export class SurveyService {
   }
 
   createSurvey(data: SurveyCreate) {
-    return this.http.post(this.apiUrl, data);
+    return this.http
+      .post(this.apiUrl, data)
+      .pipe(
+        catchError(error => {
+          alert(error.message);
+          return throwError(() => error);
+        })
+      );
   }
 
   updateSurvey(id: number, data: SurveyCreate) {
@@ -63,5 +58,9 @@ export class SurveyService {
 
   submitSurvey(id: string, data: SurveySubmit) {
     return this.http.post(`${this.apiUrl}/${id}/submit`, data);
+  }
+
+  updateSurveyStatus(data: UpdateStatus) {
+    return this.http.patch(`${this.apiUrl}/${data.id}/status`, data);
   }
 }

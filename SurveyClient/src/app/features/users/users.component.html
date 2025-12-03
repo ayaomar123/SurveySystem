@@ -1,26 +1,17 @@
-<!-- ===== USERS PAGE ===== -->
 <div class="p-6 pt-28 pb-20 max-w-5xl mx-auto">
-
-  <!-- Header -->
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-3xl font-bold text-gray-800">Users</h1>
 
     <button (click)="addFormElement.classList.toggle('hidden')"
       class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
-      + Add User
+      Add User
     </button>
   </div>
-
-  <!-- Add User Form -->
   <div #addFormElement class="hidden bg-white rounded-xl shadow p-6 mb-8">
-
     <h2 class="text-xl font-semibold text-gray-800 mb-4">{{ isEditing ? "Edit User" : "Add New User" }}</h2>
-
     <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="space-y-4">
-
-      <!-- Full Name -->
       <div>
-        <label class="block text-gray-700 font-medium mb-1">Full Name</label>
+        <label class="block text-gray-700 font-medium mb-1">Name</label>
         <input formControlName="name" type="text" placeholder="Enter user name"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
         <div *ngIf="addForm.get('name')?.touched && addForm.get('name')?.invalid"
@@ -33,22 +24,16 @@
           </div>
         </div>
       </div>
-
-      <!-- Email -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">Email</label>
         <input formControlName="email" type="email" placeholder="Enter email"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
       </div>
-
-      <!-- PAssword -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">Psssword</label>
         <input formControlName="passwordHash" type="text" placeholder="Enter Psssword"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none">
       </div>
-
-      <!-- Role -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">Role</label>
         <select formControlName="role"
@@ -58,23 +43,14 @@
           <option value="1">Designer</option>
         </select>
       </div>
-
       <button class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow">
         Save User
       </button>
-
     </form>
-
   </div>
-
-  <!-- Existing Users -->
-  <h2 class="text-xl font-semibold text-gray-800 mb-4">Existing Users</h2>
-
   <div class="bg-white shadow rounded-xl overflow-hidden">
 
     <table class="w-full text-left">
-
-      <!-- Table Header -->
       <thead class="border-b border-gray-200 bg-gray-50">
         <tr>
           <th class="px-6 py-3 font-semibold text-gray-700">Id</th>
@@ -84,11 +60,7 @@
           <th class="px-6 py-3 font-semibold text-gray-700 text-center">Actions</th>
         </tr>
       </thead>
-
-      <!-- Table Body -->
       <tbody class="divide-y divide-gray-200">
-
-        <!-- Row -->
         <tr *ngFor="let user of users; index as i" class="hover:bg-gray-50 transition">
           <td class="px-6 py-4">{{i +1}}</td>
           <td class="px-6 py-4">{{user.name}}</td>
@@ -103,11 +75,7 @@
               class="hover:bg-yellow-500 hover:text-white transition hover:cursor-pointer text-yellow-600 rounded-full bg-yellow-100 px-3 py-1">Edit</button>
           </td>
         </tr>
-
       </tbody>
-
     </table>
-
   </div>
-
 </div>
