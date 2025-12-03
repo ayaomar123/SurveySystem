@@ -3,21 +3,20 @@ import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule } fr
 import { CommonModule } from '@angular/common';
 import { QuestionService } from './Services/question.service';
 import { Question } from './interfaces/question';
-import { QuestionTypeNamePipe } from "./pipes/question-type-name.pipe";
+import { QuestionTypeBadgePipe } from './pipes/question-type-badge.pipe';
 
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, QuestionTypeNamePipe],
+  imports: [CommonModule, ReactiveFormsModule, QuestionTypeBadgePipe],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.css'
 })
 export class QuestionsComponent implements OnInit {
 
-  questions: Question[] = [];
-  questionForm!: FormGroup;
+  questions: Question[] | null = [];
+  addForm!: FormGroup;
   isEditing = false;
-
   constructor(private fb: FormBuilder, private service: QuestionService) { }
 
   ngOnInit() {
@@ -26,19 +25,16 @@ export class QuestionsComponent implements OnInit {
   }
 
   private initForm() {
-    this.questionForm = this.fb.group({
+    this.addForm = this.fb.group({
       id: [0],
-      title: ['', Validators.required],
-      description: [''],
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
+      description: [null, [Validators.minLength(3), Validators.maxLength(1000)]],
       questionType: [0, Validators.required],
-      isRequired: [false],
-
+      isRequired: [true],
       choices: this.fb.array([]),
-
       starConfig: this.fb.group({
         maxStar: [null]
       }),
-
       config: this.fb.group({
         min: [null],
         max: [null],
@@ -49,14 +45,14 @@ export class QuestionsComponent implements OnInit {
   }
 
   get choices() {
-    return this.questionForm.get('choices') as FormArray;
+    return this.addForm.get('choices') as FormArray;
   }
 
   addChoice() {
     this.choices.push(
       this.fb.group({
         text: [''],
-        order: [1]
+        order: [this.choices.length + 1]
       })
     );
   }
@@ -72,37 +68,35 @@ export class QuestionsComponent implements OnInit {
   }
 
   onSubmit() {
-    const dto = this.questionForm.value;
+    const data = this.addForm.value;
 
     let payload: any = {
-      title: dto.title,
-      description: dto.description,
-      isRequired: dto.isRequired,
-      questionType: Number(dto.questionType),
+      title: data.title,
+      description: data.description,
+      isRequired: data.isRequired,
+      questionType: Number(data.questionType),
     };
-
-    if (dto.questionType == 1 || dto.questionType == 2) {
-      payload.choices = dto.choices;
+    if (data.questionType == 1 || data.questionType == 2) {
+      payload.choices = data.choices;
     }
-    if (dto.questionType == 4) {
+    if (data.questionType == 4) {
       payload.starConfig = {
-        maxStar: dto.starConfig.maxStar
+        maxStar: data.starConfig.maxStar
       };
     }
-
-    if (dto.questionType == 5) {
+    if (data.questionType == 5) {
       payload.config = {
-        min: dto.config.min,
-        max: dto.config.max,
-        step: dto.config.step,
-        unitLabel: dto.config.unitLabel
+        min: data.config.min,
+        max: data.config.max,
+        step: data.config.step,
+        unitLabel: data.config.unitLabel
       };
     }
 
     const request =
-      dto.id === 0
+      data.id === 0
         ? this.service.createQuestion(payload)
-        : this.service.updateQuestion(dto.id, payload);
+        : this.service.updateQuestion(data.id, payload);
 
     request.subscribe({
       next: () => {
@@ -113,13 +107,10 @@ export class QuestionsComponent implements OnInit {
   }
 
   onEdit(question: Question, formElement: HTMLElement) {
-    console.log("Editing Question:", question);
     this.isEditing = true;
     formElement.classList.remove('hidden');
 
-    this.clearForm();
-
-    this.questionForm.patchValue({
+    this.addForm.patchValue({
       id: question.id,
       title: question.title,
       description: question.description,
@@ -137,7 +128,6 @@ export class QuestionsComponent implements OnInit {
     });
 
 
-    console.log(this.questionForm.value.id);
     if (question.choices?.length) {
       question.choices.forEach(opt => {
         this.choices.push(
@@ -159,17 +149,15 @@ export class QuestionsComponent implements OnInit {
   clearForm() {
     this.isEditing = false;
 
-    this.questionForm.reset({
+    this.addForm.reset({
       id: 0,
       title: '',
       description: '',
       questionType: 0,
       isRequired: false,
-
       starConfig: {
         maxStar: null
       },
-
       config: {
         min: null,
         max: null,

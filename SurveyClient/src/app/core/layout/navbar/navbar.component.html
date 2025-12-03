@@ -7,14 +7,13 @@
     </div>
 
     <div *ngIf="auth.isLoggedIn()" class="hidden md:flex items-center space-x-6 text-gray-700">
-      <a routerLink="/home" class="text-indigo-600 hover:text-indigo-600 transition">Home</a>
-      <a *ngIf="auth.role() === 'Admin'" routerLink="/questions" class="hover:text-indigo-600 transition">Questions</a>
-      <a routerLink="/surveys" class="hover:text-indigo-600">Surveys</a>
-      <a *ngIf="auth.role() === 'Admin'" routerLink="/users" class="hover:text-indigo-600">Users</a>
+      <a routerLinkActive="active-nav" routerLink="/home" class="hover:text-indigo-600 transition">Home</a>
+      <a routerLinkActive="active-nav" *ngIf="auth.role() === 'Admin'" routerLink="/questions"
+        class="hover:text-indigo-600 transition">Questions</a>
+      <a routerLinkActive="active-nav" routerLink="/surveys" class="hover:text-indigo-600">Surveys</a>
+      <a routerLinkActive="active-nav" *ngIf="auth.role() === 'Admin'" routerLink="/users"
+        class="hover:text-indigo-600">Users</a>
       <div class="flex items-center space-x-4">
-        <span class="py-1 text-indigo-700">
-          Hello {{auth.user()?.name}}
-        </span>
         <button (click)="onLogout()"
           class="px-4 py-1 bg-indigo-200 rounded-full hover:bg-indigo-600 transition hover:cursor-pointer hover:text-white">
           Logout

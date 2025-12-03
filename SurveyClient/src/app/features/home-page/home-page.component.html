@@ -7,7 +7,7 @@
       <p class="text-gray-400 text-sm border border-gray-200 rounded-full p-2">
         {{ (today | date:"MMM d, y, h:mm a '('zzz')'") }}</p>
     </div>
-    <p class="text-gray-600 mt-1">Welcome back! Here is an overview of your surveys.</p>
+    <p class="text-gray-600 mt-1">Welcome back {{auth.user()?.name}}</p>
 
     <div *ngIf="hasAccess">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
@@ -58,7 +58,7 @@
         </div>
         <div class="border border-gray-200 shadow rounded-b-lg">
           <div class="my-2 p-4 border-b border-gray-100" *ngFor="let question of analytics?.questions;let i = index">
-            <h6 class="mb-4 font-bold">{{question.title}}</h6>
+            <h6 class="mb-4 font-bold">{{i+1}}. {{question.title}}</h6>
             <small class="bg-blue-100 rounded-lg p-1 text-sm ">{{question.questionType |
               questionTypeName}}</small>
             <small class="bg-gray-100 rounded-lg p-1 text-sm mx-2">{{ question.totalResponses }} Total Responses</small>

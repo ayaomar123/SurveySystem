@@ -1,0 +1,13 @@
+.active-nav {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.nav-item {
+  color: #4b5563;
+  transition: color 0.2s ease;
+}
+
+.nav-item:hover {
+  color: #4f46e5;
+}

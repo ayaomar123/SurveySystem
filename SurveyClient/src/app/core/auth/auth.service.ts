@@ -49,7 +49,6 @@ export class AuthService {
       role: role
     } as User);
 
-    console.log("Decoded User:", this._user());
   }
 
   private getToken(): string | null {
@@ -79,12 +78,9 @@ export class AuthService {
         }),
         tap(response => {
           if (!response) return;
-
           const data = response as LoginSuccess;
-
           this.saveToken(data.token);
           this.initializeUser();
-
           this.router.navigate(['/']);
         })
       );

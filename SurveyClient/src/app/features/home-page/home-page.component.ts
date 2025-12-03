@@ -4,6 +4,7 @@ import { HomeService } from './services/home.service';
 import { Statics, SurveyAnalytics } from './interfaces/home';
 import { QuestionTypeNamePipe } from "../questions/pipes/question-type-name.pipe";
 import { ɵInternalFormsSharedModule } from "@angular/forms";
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-home-page',
@@ -18,6 +19,7 @@ export class HomePageComponent implements OnInit {
   statics: Statics | undefined;
   analytics: SurveyAnalytics | undefined;
   showAnalyticsDiv: boolean = false;
+  auth = inject(AuthService);
   private service = inject(HomeService);
 
   ngOnInit(): void {
@@ -41,7 +43,6 @@ export class HomePageComponent implements OnInit {
 
     this.service.getAnalytics(id).subscribe({
       next: res => {
-        console.log(res)
         this.analytics = res,
           this.showAnalyticsDiv = true
       }
